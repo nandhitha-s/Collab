@@ -21,7 +21,7 @@ const loginUser = async (req, res) => {
 
     
         const token = createToken(user._id);
-        return res.json({ success: true, token });
+        return res.json({ success: true, token , role: user.role});
 
     } catch (error) {
         console.log(error);
