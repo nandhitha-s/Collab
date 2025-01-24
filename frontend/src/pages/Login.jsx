@@ -1,22 +1,37 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
-  const [rollNumber, setRollNumber] = useState("");
+  const [userName, setUserName] = useState(""); // Updated field name
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Roll Number:", rollNumber);
-    console.log("Password:", password);
 
-    navigate("/dashboard");
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/user/login", {
+        userName,
+        password,
+      });
+
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token); // Store JWT in localStorage
+        navigate("/dashboard");
+      } else {
+        setErrorMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -30,15 +45,19 @@ const Login = () => {
           <p>Log In!</p>
         </div>
 
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-4">{errorMessage}</p>
+        )}
+
         <div className="mt-6">
           <label className="block text-sm font-medium text-cl4 mb-2">
-            ROLL NUMBER
+            USERNAME
           </label>
           <input
             type="text"
-            placeholder="22PT19"
-            value={rollNumber}
-            onChange={(e) => setRollNumber(e.target.value)}
+            placeholder="Enter your username"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             className="w-full px-4 py-2 border border-cl3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cl4"
             required
           />
