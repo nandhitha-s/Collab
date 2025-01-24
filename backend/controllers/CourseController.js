@@ -1,6 +1,4 @@
-import CourseModel from "../models/Course";
-import jwt from 'jsonwebtoken';
-import authMiddleware from "../middleware/auth";
+import CourseModel from "../models/Course.js";
 
 const listCourse = async (req, res) => {
     const {user} = req.body;
@@ -20,7 +18,7 @@ const listCourse = async (req, res) => {
         console.log(error);
         res.json({ success: false, message: "Error fetching courses" });
     }
-
-    
     
 };
+
+export { listCourse };
