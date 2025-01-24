@@ -1,11 +1,12 @@
 import React from "react";
-import axios from 'axios';
-const Login = ()=>{
-    return(
-        <div>
+
+const Login = () => {
+  return (
+    <div className="flex items-center justify-center h-screen">
+        <div className="w-[300px] bg-green-500 h-[500px] content-center ">
             
         </div>
-    )
- 
-};
+    </div>
+  );
+}
 export default Login;
