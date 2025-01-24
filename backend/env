@@ -1,0 +1,3 @@
+MONGO_URL=mongodb+srv://user1:user4022@cluster0.oqr6k.mongodb.net/collab?retryWrites=true&w=majority
+PORT=5000
+JWT_SECRET=23417c068a654f0988a0934442351e7e154732da44fc28f6e9c46dbb495f1a1a
