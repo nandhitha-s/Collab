@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SignUp = () => {
-  const [userName, setUserName] = useState(""); // Username instead of roll number
+  const [userName, setUserName] = useState(""); 
   const [name, setName] = useState("");
   const [role, setRole] = useState("student");
   const [password, setPassword] = useState("");
@@ -27,7 +28,7 @@ const SignUp = () => {
       });
 
       if (response.data.success) {
-        navigate("/"); // Redirect to login page
+        navigate("/"); 
       } else {
         setErrorMessage(response.data.message);
       }

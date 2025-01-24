@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
-  const [userName, setUserName] = useState(""); // Updated field name
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,8 +24,17 @@ const Login = () => {
       });
 
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token); // Store JWT in localStorage
-        navigate("/dashboard");
+        const { token, role } = response.data;
+
+        localStorage.setItem("token", token);
+
+        if (role === "student") {
+          navigate("/dashboard");
+        } else if (role === "teacher") {
+          navigate("/faculty-dashboard"); 
+        } else {
+          setErrorMessage("Unknown role. Please contact the administrator.");
+        }
       } else {
         setErrorMessage(response.data.message);
       }
