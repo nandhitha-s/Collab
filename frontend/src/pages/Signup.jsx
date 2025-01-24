@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [rollNumber, setRollNumber] = useState("");
@@ -7,16 +8,20 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
+  const navigate = useNavigate(); 
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     console.log("Roll Number:", rollNumber);
     console.log("Name:", name);
     console.log("Role:", role);
     console.log("Password:", password);
+    navigate("/");
   };
 
   return (
