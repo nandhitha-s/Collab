@@ -18,7 +18,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col h-screen bg-cl1">
-      {/* Header */}
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-4">
@@ -27,7 +26,6 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="flex-1 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {courses.map((course, idx) => (
           <div

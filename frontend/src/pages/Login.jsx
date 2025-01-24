@@ -16,7 +16,6 @@ const Login = () => {
     console.log("Roll Number:", rollNumber);
     console.log("Password:", password);
 
-    // Navigate to dashboard after successful login
     navigate("/dashboard");
   };
 
