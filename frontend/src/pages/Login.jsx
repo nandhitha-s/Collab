@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
@@ -13,13 +13,15 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
+    console.log("Roll Number:", rollNumber);
     console.log("Password:", password);
-    navigate("/signup"); // Navigate to the signup page after login
+
+    // Navigate to dashboard after successful login
+    navigate("/dashboard");
   };
 
   return (
-    <div className="flex items-center justify-center h-screen ">
+    <div className="flex items-center justify-center h-screen">
       <form
         onSubmit={handleSubmit}
         className="relative w-[400px] h-[550px] bg-cl5 rounded-xl shadow-xl border-cl3 flex flex-col p-6"
@@ -31,13 +33,13 @@ const Login = () => {
 
         <div className="mt-6">
           <label className="block text-sm font-medium text-cl4 mb-2">
-            EMAIL ADDRESS
+            ROLL NUMBER
           </label>
           <input
-            type="email"
-            placeholder="abc123@gmail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="22PT19"
+            value={rollNumber}
+            onChange={(e) => setRollNumber(e.target.value)}
             className="w-full px-4 py-2 border border-cl3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cl4"
             required
           />
