@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import "dotenv/config";
 export const connectDB = async () => {
-    await mongoose.connect("mongodb+srv://user1:user4022@cluster0.oqr6k.mongodb.net/collab?retryWrites=true&w=majority").then(()=>{
+    await mongoose.connect(process.env.MONGO_URL).then(()=>{
         console.log("Database connected")
     })
 }
