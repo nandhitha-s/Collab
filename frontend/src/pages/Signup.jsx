@@ -20,7 +20,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/user/register", {
+      const response = await axios.post("https://collab-imps.onrender.com/api/auth/user/register", {
         userName,
         name,
         role,
