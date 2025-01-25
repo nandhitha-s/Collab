@@ -17,24 +17,33 @@ const AssignTask = () => {
 
     const fetchCourses = async () => {
       try {
+        console.log("Fetching courses for Teacher ID:", teacherId); // Log teacher ID
         const response = await axios.post(
           "http://localhost:5000/api/auth/teacher/listTeacherCourse",
           { teacherId }
         );
-        if (response.data.success) {
-          // Map courses to match the structure in AddCourse
-          const formattedCourses = response.data.courses.map((course) => ({
-            id: course._id,
-            name: course.name,
-            code: course.description[0]?.courseCode || "N/A",
-          }));
+
+        console.log("API Response:", response.data); // Log full API response
+
+        if (response.data.success && response.data.courses.length > 0) {
+          const formattedCourses = response.data.courses.flatMap((course) =>
+            course.description.map((desc) => ({
+              id: course._id,
+              courseCode: desc.courseCode,
+              courseName: desc.courseName,
+              courseParentName: course.name,
+            }))
+          );
+          console.log("Formatted Courses:", formattedCourses); // Log formatted courses
           setCourses(formattedCourses);
+        } else if (response.data.courses.length === 0) {
+          setActionStatus("No courses found for the teacher.");
         } else {
           setActionStatus("Failed to fetch courses: " + response.data.message);
         }
       } catch (error) {
-        setActionStatus("Error fetching courses.");
-        console.error(error);
+        setActionStatus("Error fetching courses. Please try again later.");
+        console.error("Error fetching courses:", error); // Log errors
       }
     };
 
@@ -56,7 +65,7 @@ const AssignTask = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-cl1">
+    <div className="flex flex-col min-h-screen bg-cl1"> {/* Updated: min-h-screen ensures full height */}
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Assign Task</h1>
       </header>
@@ -78,24 +87,34 @@ const AssignTask = () => {
                 courses.map((course) => (
                   <div
                     key={course.id}
-                    className="bg-cl5 shadow-md rounded-lg p-6 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
+                    className="bg-cl5 shadow-md rounded-lg p-4 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
                     onClick={() => handleCourseSelect(course)}
                   >
-                    <h3 className="text-xl font-bold text-cl4">{course.name}</h3>
+                    <img
+                      src="/assets/to-do-list.png" // Image path from public/assets folder
+                      alt="To-Do List"
+                      className="w-16 h-16 sm:w-20 sm:h-20 mb-4" // Increased image size on larger screens
+                    />
+                    <h3 className="text-xl font-bold text-cl4">{course.courseParentName}</h3>
                     <p className="text-cl4 text-sm mt-2">
-                      Code: {course.code}
+                      Code: {course.courseCode}
+                    </p>
+                    <p className="text-cl4 text-sm mt-2">
+                      Course: {course.courseName}
                     </p>
                   </div>
                 ))
               ) : (
-                <div className="text-center text-cl4">No courses available.</div>
+                <div className="text-center text-cl4">
+                  No courses available.
+                </div>
               )}
             </div>
           </>
         ) : (
           <>
             <h2 className="text-xl font-bold text-cl4 mb-6">
-              Assign Task for {selectedCourse.name}
+              Assign Task for {selectedCourse.courseName}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <button
