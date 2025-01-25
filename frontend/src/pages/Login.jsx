@@ -26,12 +26,16 @@ const Login = () => {
       if (response.data.success) {
         const { token, role } = response.data;
 
+        // Store user data in localStorage
         localStorage.setItem("token", token);
+        localStorage.setItem("userName", userName);
+        localStorage.setItem("role", role);
 
+        // Navigate based on role
         if (role === "student") {
           navigate("/dashboard");
         } else if (role === "teacher") {
-          navigate("/faculty-dashboard"); 
+          navigate("/faculty-dashboard");
         } else {
           setErrorMessage("Unknown role. Please contact the administrator.");
         }
