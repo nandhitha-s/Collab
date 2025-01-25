@@ -7,7 +7,7 @@ const listCourse = async (req, res) => {
     try{
         const course = await CourseModel.findAll({
             where:{
-                courseCode: code
+                name: code
             }
         });
         if(!course){
