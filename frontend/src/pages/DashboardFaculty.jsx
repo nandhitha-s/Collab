@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,17 +6,16 @@ const FacultyDashboard = () => {
   const navigate = useNavigate();
 
   const actions = [
-    { name: "Add Course", path: "/add-course", description: "Create and add a new course for students." },
+    { name: "Add Course", path: "/add-course", description: "Assign courses to yourself." },
     { name: "Assign Task", path: "/assign-task", description: "Assign tasks or homework to your students." },
     { name: "View Submissions", path: "/view-submissions", description: "Review and grade student submissions." },
     { name: "Post Announcements", path: "/post-announcements", description: "Share updates and announcements with your class." },
   ];
 
-  // Retrieve userName from localStorage when the component mounts
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
     if (storedUserName) {
-      setUserName(storedUserName); // Set userName from localStorage
+      setUserName(storedUserName);
     }
   }, []);
 
@@ -26,7 +24,6 @@ const FacultyDashboard = () => {
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Faculty Dashboard</h1>
         <div className="flex items-center gap-4">
-          {/* Displaying the user name if available, otherwise default to 'Faculty' */}
           <p className="text-white text-s">Welcome, {userName || 'Faculty'}</p>
           <div className="w-10 h-10 rounded-full bg-cl1"></div>
         </div>
