@@ -1,5 +1,5 @@
-import TeacherModel from "../models/Teacher";
-import CourseModel from "../models/Course";
+import TeacherModel from "../models/Teacher.js";
+import CourseModel from "../models/Course.js";
 
 const addCourse = async (req, res) => {
     const {teacherId , courseId} = req.body;
@@ -21,9 +21,6 @@ const addCourse = async (req, res) => {
     }
 
 };
-
-import TeacherModel from "../models/Teacher";
-import CourseModel from "../models/Course";
 
 const listTeacherCourse = async (req, res) => {
   const { teacherId } = req.body;
@@ -47,5 +44,5 @@ const listTeacherCourse = async (req, res) => {
   }
 };
 
-export default { addCourse,listTeacherCourse }; 
+export default {addCourse,listTeacherCourse}; 
 

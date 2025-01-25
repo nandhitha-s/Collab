@@ -1,5 +1,6 @@
 import express from 'express';
-import {addCourse,listTeacherCourse} from '../controllers/TeacherController.js';
+import TeacherController from "../controllers/TeacherController.js";
+const { addCourse, listTeacherCourse } = TeacherController;
 
 const teacherRouter = express.Router();
 
