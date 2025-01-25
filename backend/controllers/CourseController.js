@@ -30,4 +30,29 @@ const listCourse = async (req, res) => {
     
 };
 
-export { listCourse };
+const listAllCourse = async (req, res) => {
+  try { 
+    const courses = await CourseModel.find();
+
+    
+    if (!courses || courses.length === 0) {
+      return res.json({ success: false, message: "No courses found" });
+    }
+
+    const courseCodes = courses.flatMap((item) =>
+      item.description.map((desc) => desc.courseCode)
+    );
+    const courseNames = courses.flatMap((item) =>
+      item.description.map((desc) => desc.courseName)
+    );
+
+    
+    return res.json({ success: true, courseCodes, courseNames });
+  } catch (error) {
+    console.error(error);
+    return res.json({ success: false, message: "Error fetching courses" });
+  }
+};
+
+
+export { listCourse, listAllCourse };
