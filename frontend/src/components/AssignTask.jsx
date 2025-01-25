@@ -7,9 +7,7 @@ const AssignTask = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [actionStatus, setActionStatus] = useState("");
-
-  // Retrieve the teacherId (username) from localStorage or sessionStorage
-  const teacherId = localStorage.getItem("userName");
+  const teacherId = localStorage.getItem("userName"); // Retrieve the teacher ID from localStorage
 
   useEffect(() => {
     if (!teacherId) {
@@ -19,14 +17,20 @@ const AssignTask = () => {
 
     const fetchCourses = async () => {
       try {
-        const response = await axios.post("http://localhost:5000/api/auth/teacher/listTeacherCourse", {
-          teacherId,
-        });
-        console.log("Backend response:", response);
+        const response = await axios.post(
+          "http://localhost:5000/api/auth/teacher/listTeacherCourse",
+          { teacherId }
+        );
         if (response.data.success) {
-          setCourses(response.data.courses);
+          // Map courses to match the structure in AddCourse
+          const formattedCourses = response.data.courses.map((course) => ({
+            id: course._id,
+            name: course.name,
+            code: course.description[0]?.courseCode || "N/A",
+          }));
+          setCourses(formattedCourses);
         } else {
-          setActionStatus("Error fetching courses.");
+          setActionStatus("Failed to fetch courses: " + response.data.message);
         }
       } catch (error) {
         setActionStatus("Error fetching courses.");
@@ -66,21 +70,21 @@ const AssignTask = () => {
 
         {!selectedCourse ? (
           <>
-            <h2 className="text-xl font-bold text-cl4 mb-6">Select a Course to Assign Task</h2>
+            <h2 className="text-xl font-bold text-cl4 mb-6">
+              Select a Course to Assign Task
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.length > 0 ? (
                 courses.map((course) => (
                   <div
-                    key={course._id}
+                    key={course.id}
                     className="bg-cl5 shadow-md rounded-lg p-6 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
                     onClick={() => handleCourseSelect(course)}
                   >
                     <h3 className="text-xl font-bold text-cl4">{course.name}</h3>
-                    {course.description.map((desc) => (
-                      <p key={desc._id} className="text-cl4">
-                        {desc.courseName} ({desc.courseCode})
-                      </p>
-                    ))}
+                    <p className="text-cl4 text-sm mt-2">
+                      Code: {course.code}
+                    </p>
                   </div>
                 ))
               ) : (
