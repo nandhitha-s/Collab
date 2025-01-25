@@ -22,26 +22,28 @@ const Dashboard = () => {
       try {
         const response = await axios.post(
           "http://localhost:5000/api/auth/course/dashboard",
-          { user: storedUserName }, // Send the username as 'user' in the body
+          { userName: storedUserName }, 
           {
             headers: {
-              token, // Send the token in the header
+              token, 
             },
           }
         );
 
-        console.log("Backend Response:", response.data); // Log the response data
+        console.log("Backend Response:", response.data); 
 
-        // Check if the request was successful
         if (response.data.success) {
-          setCourses(response.data.course); // Set courses with the response data
+          const coursesData = response.data.courseCodes.map((code, index) => ({
+            courseCode: code,
+            courseName: response.data.courseNames[index],
+          }));
+          setCourses(coursesData); 
         } else {
           setErrorMessage(response.data.message || "Unable to fetch courses.");
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
 
-        // Handle token-related errors (401, 403)
         if (error.response?.status === 401 || error.response?.status === 403) {
           localStorage.clear();
           navigate("/");
@@ -67,7 +69,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col h-screen bg-cl1">
-      {/* Header */}
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-4">
@@ -85,7 +86,6 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {/* Courses */}
       <div className="flex-1 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {courses.length > 0 ? (
           courses.map((course, idx) => (

@@ -1,10 +1,16 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CoursePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { course } = location.state || {};
+
+  const handleAssignmentsClick = () => {
+    // Redirect to the Assignments page
+    navigate(`/course/${course?.courseCode}/assignments`, { state: { course } });
+  };
 
   return (
     <div className="flex flex-col h-screen bg-cl1">
@@ -14,13 +20,32 @@ const CoursePage = () => {
 
       <div className="flex flex-1 p-4 gap-4">
         <section className="flex flex-col gap-4 w-1/3">
-          <div className="bg-cl5 shadow-md rounded-lg p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-cl4">Assignments</h3>
-            <p className="text-cl4 text-sm">Check your assignments and due dates.</p>
+          {/* Assignments Card */}
+          <div
+            className="bg-cl5 shadow-md rounded-lg p-6 space-y-4 flex items-center cursor-pointer"
+            onClick={handleAssignmentsClick}
+          >
+            <img
+              src="/assets/Assignment.png"
+              alt="Assignment"
+              className="w-16 h-auto mr-4"
+            />
+            <div className="flex flex-col">
+              <h3 className="text-lg font-semibold text-cl4">Assignments</h3>
+              <p className="text-cl4 text-sm">Check your assignments and due dates.</p>
+            </div>
           </div>
-          <div className="bg-cl5 shadow-md rounded-lg p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-cl4">Resources</h3>
-            <p className="text-cl4 text-sm">Access all your study materials and references.</p>
+          {/* Resources Card */}
+          <div className="bg-cl5 shadow-md rounded-lg p-6 space-y-4 flex items-center">
+            <img
+              src="/assets/Resources.png"
+              alt="Resources"
+              className="w-16 h-auto mr-4"
+            />
+            <div className="flex flex-col">
+              <h3 className="text-lg font-semibold text-cl4">Resources</h3>
+              <p className="text-cl4 text-sm">Access all your study materials and references.</p>
+            </div>
           </div>
         </section>
 
