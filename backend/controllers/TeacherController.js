@@ -22,6 +22,6 @@ const addCourse = async (req, res) => {
 
 };
 
-const listTeacherCourse
+
 
 export default {addCourse};
