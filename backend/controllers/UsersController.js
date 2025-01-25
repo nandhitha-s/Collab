@@ -5,10 +5,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 
 const loginUser = async (req, res) => {
+    
     const { userName, password } = req.body;
     try {
         
         const user = await UserModel.findOne({ username: userName });
+        console.log(user);
         if (!user) {
             return res.json({ success: false, message: "User does not exist" });
         }
@@ -35,24 +37,27 @@ const createToken = (id) => {
 
 const registerUser = async (req, res) => {
     const { userName, name, role, password } = req.body;
+    
 
     try {
-        
+        // Check if required fields are missing
+        if (!userName || !name || !role || !password) {
+            return res.json({ success: false, message: "All fields are required" });
+        }
+
         const exists = await UserModel.findOne({ username: userName });
         if (exists) {
             return res.json({ success: false, message: "User already exists" });
         }
 
-        
-        if (password.length < 8) {
+        // Validate password length
+        if (password && password.length < 8) {
             return res.json({ success: false, message: "Enter a strong password" });
         }
 
-    
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        
         const newUser = new UserModel({
             username: userName,
             password: hashedPassword,
@@ -60,7 +65,6 @@ const registerUser = async (req, res) => {
         });
         const user = await newUser.save();
 
-        
         if (role === "student") {
             const student = new StudentModel({
                 userId: user._id,
@@ -77,7 +81,6 @@ const registerUser = async (req, res) => {
             await teacher.save();
         }
 
-        
         const token = createToken(user._id);
         return res.json({ success: true, token });
 
@@ -85,6 +88,6 @@ const registerUser = async (req, res) => {
         console.log(error);
         return res.json({ success: false, message: "Error in adding user" });
     }
-}
+};
 
 export { loginUser, registerUser };

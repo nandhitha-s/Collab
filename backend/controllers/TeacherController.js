@@ -9,11 +9,12 @@ const addCourse = async (req, res) => {
         if(!teacher){
             return res.json({success:false,message:"Teacher does not exist"});
         }
-        const course = await CourseModel.findByone(courseId);
+        const course = await CourseModel.findByAll(courseId);
         if(!course){
             return res.json({success:false,message:"Course does not exist"});
         }
-        teacher.teachingCourses.push(courseId);
+        const courseCodes = course.map((course) => course.description.map((desc) => desc.courseCode));
+        teacher.teachingCourses.push(courseCodes);
         await teacher.save();
         return res.json({success:true,message:"Course added successfully"});
     } catch (error) {
@@ -32,9 +33,8 @@ const listTeacherCourse = async (req, res) => {
     if (!teacher) {
       return res.json({ success: false, message: "Teacher does not exist" });
     }
-
     
-    const courses = await CourseModel.find({
+    const courses = await CourseModel.findByAll({
       "description.courseCode": { $in: teacher.teachingCourses }, 
     });
 

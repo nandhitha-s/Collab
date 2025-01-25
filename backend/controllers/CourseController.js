@@ -1,23 +1,29 @@
 import CourseModel from "../models/Course.js";
-
+console.log(CourseModel);
 const listCourse = async (req, res) => {
-    const {user} = req.body;
-    const code = user.slice(0,4).toUpperCase();
-
-    try{
-        const course = await CourseModel.findAll({
-            where:{
-                name: code
-            }
-        });
-        if(!course){
-            return res.json({success:false,message:"Courses does not exist"})
+    const {userName} = req.body;    
+    const code = userName.slice(0,4).toUpperCase();
+    
+    try {
+        // Query MongoDB for courses matching the given code
+        const courses = await CourseModel.find({ name: code });
+    
+        // Check if courses exist
+        if (!courses || courses.length === 0) {
+          return res.json({ success: false, message: "Courses do not exist" });
         }
-        const courseCodes = course.map((course) => course.description.map((desc) => desc.courseCode));
-        const courseNames = course.map((course) => course.description.map((desc) => desc.courseName));
-
-        return res.json({success:true,courseCodes,courseNames});
-    }catch (error) {
+    
+        // Extract courseCodes and courseNames from the description array
+        const courseCodes = courses.flatMap((item) =>
+          item.description.map((desc) => desc.courseCode)
+        );
+        const courseNames = courses.flatMap((item) =>
+          item.description.map((desc) => desc.courseName)
+        );
+    
+        // Send response
+        return res.json({ success: true, courseCodes, courseNames });
+      }catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error fetching courses" });
     }

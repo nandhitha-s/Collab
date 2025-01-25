@@ -20,8 +20,8 @@ app.get("/",(req,res)=>{
 connectDB();
 
 app.use("/api/auth/user",userRouter);
-app.use("/api/auth/course",authMiddleware,courseRouter);
-app.use("/api/auth/teacher",authMiddleware,teacherRouter);
+app.use("/api/auth/course",courseRouter);
+app.use("/api/auth/teacher",teacherRouter);
 
 app.listen(port,()=>{
     console.log(`running on port ${port}`)
