@@ -3,25 +3,33 @@ import CourseModel from "../models/Course.js";
 import AssignmentModel from "../models/Assignment.js";
 
 const addCourse = async (req, res) => {
-    const {teacherId , courseId} = req.body;
-    try {
-        const teacher = await TeacherModel.find(teacherId);
-        if(!teacher){
-            return res.json({success:false,message:"Teacher does not exist"});
-        }
-        const course = await CourseModel.find(courseId);
-        if(!course){
-            return res.json({success:false,message:"Course does not exist"});
-        }
-        const courseCodes = course.map((course) => course.description.map((desc) => desc.courseCode));
-        teacher.teachingCourses.push(courseCodes);
-        await teacher.save();
-        return res.json({success:true,message:"Course added successfully"});
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Error adding course" });
-    }
+  const { teacherId, courseId } = req.body;
+  try {
+      // Find the teacher using the teacherId
+      const teacher = await TeacherModel.find({ userId: teacherId });
+      if (!teacher) {
+          return res.json({ success: false, message: "Teacher does not exist" });
+      }
+      console.log(teacher);
 
+      // Find the course using the courseId
+      const course = await CourseModel.find({ name: courseId });
+      if (!course) {
+          return res.json({ success: false, message: "Course does not exist" });
+      }
+
+      // Extract course codes (assuming description is an array of objects)
+      const courseCodes = course.description.map((desc) => desc.courseCode);
+
+      // Add course codes to teacher's teachingCourses
+      teacher.teachingCourses.push(...courseCodes);
+      await teacher.save();
+
+      return res.json({ success: true, message: "Course added successfully" });
+  } catch (error) {
+      console.error(error);
+      res.json({ success: false, message: "Error adding course" });
+  }
 };
 
 const listTeacherCourse = async (req, res) => {

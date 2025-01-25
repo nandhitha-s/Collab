@@ -17,9 +17,9 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://collab-frontend-putq.onrender.com"],
-    methods: ["POST", "GET"],
-    credentials: true,
+    //origin: ["https://collab-frontend-putq.onrender.com","http://localhost:5173"],
+    //methods: ["POST", "GET"],
+    //credentials: true,
   })
 );
 
