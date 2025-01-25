@@ -1,6 +1,7 @@
 import TeacherModel from "../models/Teacher.js";
 import CourseModel from "../models/Course.js";
 import AssignmentModel from "../models/Assignment.js";
+import UserModel from "../models/User.js";
 
 
 const addCourse = async (req, res) => {
@@ -10,9 +11,11 @@ const addCourse = async (req, res) => {
     if (typeof teacherId !== "string" || teacherId.trim() === "") {
         return res.json({ success: false, message: "Invalid teacherId format" });
     }
+    const user = await UserModel.findOne({username:teacherId});
+    const id = user._id;
 
     // Find teacher by userId
-    const teacher = await TeacherModel.findOne({ userId: teacherId });
+    const teacher = await TeacherModel.findOne({ userId: id });
     if (!teacher) {
         return res.json({ success: false, message: "Teacher does not exist" });
     }
@@ -47,8 +50,9 @@ const listTeacherCourse = async (req, res) => {
   const { teacherId } = req.body;
 
   try {
-
-    const teacher = await TeacherModel.findOne({userId:teacherId});
+    const user = await UserModel.findOne({username:teacherId});
+    const id = user._id;
+    const teacher = await TeacherModel.findOne({userId:id});
     if (!teacher) {
       return res.json({ success: false, message: "Teacher does not exist" });
     }
