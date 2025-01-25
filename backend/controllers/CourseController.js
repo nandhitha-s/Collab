@@ -1,5 +1,5 @@
 import CourseModel from "../models/Course.js";
-console.log(CourseModel);
+
 const listCourse = async (req, res) => {
     const {userName} = req.body;    
     const code = userName.slice(0,4).toUpperCase();
