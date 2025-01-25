@@ -51,7 +51,13 @@ const AssignTask = () => {
   }, [teacherId]);
 
   const handleCourseSelect = (course) => {
-    setSelectedCourse(course);
+    if (selectedCourse && selectedCourse.id === course.id) {
+      // Deselect the course if the same course is clicked
+      setSelectedCourse(null);
+    } else {
+      // Select the new course
+      setSelectedCourse(course);
+    }
   };
 
   const handleAction = (action) => {
@@ -65,7 +71,7 @@ const AssignTask = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-cl1"> {/* Updated: min-h-screen ensures full height */}
+    <div className="flex flex-col min-h-screen bg-cl1">
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Assign Task</h1>
       </header>
@@ -87,13 +93,13 @@ const AssignTask = () => {
                 courses.map((course) => (
                   <div
                     key={course.id}
-                    className="bg-cl5 shadow-md rounded-lg p-4 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
+                    className={`bg-cl5 shadow-md rounded-lg p-4 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out ${selectedCourse?.id === course.id ? 'bg-cl2' : ''}`}
                     onClick={() => handleCourseSelect(course)}
                   >
                     <img
-                      src="/assets/to-do-list.png" // Image path from public/assets folder
+                      src="/assets/to-do-list.png"
                       alt="To-Do List"
-                      className="w-16 h-16 sm:w-20 sm:h-20 mb-4" // Increased image size on larger screens
+                      className="w-16 h-16 sm:w-20 sm:h-20 mb-4"
                     />
                     <h3 className="text-xl font-bold text-cl4">{course.courseParentName}</h3>
                     <p className="text-cl4 text-sm mt-2">
