@@ -22,6 +22,30 @@ const addCourse = async (req, res) => {
 
 };
 
+import TeacherModel from "../models/Teacher";
+import CourseModel from "../models/Course";
 
+const listTeacherCourse = async (req, res) => {
+  const { teacherId } = req.body;
 
-export default {addCourse};
+  try {
+
+    const teacher = await TeacherModel.findone(teacherId);
+    if (!teacher) {
+      return res.json({ success: false, message: "Teacher does not exist" });
+    }
+
+    
+    const courses = await CourseModel.find({
+      "description.courseCode": { $in: teacher.teachingCourses }, 
+    });
+
+    return res.json({ success: true, courses });
+  } catch (error) {
+    console.log("Error fetching courses:", error);
+    return res.json({ success: false, message: "Error fetching courses" });
+  }
+};
+
+export default { addCourse,listTeacherCourse }; 
+

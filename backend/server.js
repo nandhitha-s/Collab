@@ -5,6 +5,7 @@ import "dotenv/config"
 import userRouter from "./routes/UserRoute.js";
 import courseRouter from "./routes/CourseRoute.js";
 import authMiddleware from "./middleware/auth.js";
+import teacherRouter from "./routes/TeacherRoute.js";
 
 const app = express()
 const port = process.env.PORT
@@ -13,13 +14,14 @@ app.use(express.json())
 app.use(cors()) 
 
 app.get("/",(req,res)=>{
-    res.send("Connected")
+    res.send("Connected");
 }) 
 
 connectDB();
 
-app.use("/api/auth/user",userRouter)
-app.use("api/auth/course",authMiddleware,courseRouter)
+app.use("/api/auth/user",userRouter);
+app.use("/api/auth/course",authMiddleware,courseRouter);
+app.use("/api/auth/teacher",authMiddleware,teacherRouter);
 
 app.listen(port,()=>{
     console.log(`running on port ${port}`)
