@@ -32,7 +32,7 @@ const AddCourse = () => {
       try {
         const response = await axios.post(
           "http://localhost:5000/api/auth/teacher/listTeacherCourse",
-          { teacherId } // Use teacherId as username
+          { teacherId } 
         );
         if (response.data.success) {
           const courses = response.data.courses.map((course) => ({
@@ -62,7 +62,7 @@ const AddCourse = () => {
           "http://localhost:5000/api/auth/teacher/addCourse",
           {
             teacherId, // Use teacherId as username
-            courseId: course.code,
+            courseId: [course.code],
           }
         );
         if (response.data.success) {

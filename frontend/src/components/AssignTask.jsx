@@ -1,20 +1,41 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AssignTask = () => {
   const navigate = useNavigate();
-
-  const courses = [
-    { id: 1, name: "Software Engineering" },
-    { id: 2, name: "Data Structures" },
-    { id: 3, name: "Computer Networks" },
-    { id: 4, name: "Machine Learning" },
-    { id: 5, name: "Database Systems" },
-    { id: 6, name: "Cyber Security" },
-  ];
-
+  const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [actionStatus, setActionStatus] = useState("");
+
+  // Retrieve the teacherId (username) from localStorage or sessionStorage
+  const teacherId = localStorage.getItem("userName");
+
+  useEffect(() => {
+    if (!teacherId) {
+      setActionStatus("Teacher ID is missing. Please log in.");
+      return;
+    }
+
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/api/auth/teacher/listTeacherCourse", {
+          teacherId,
+        });
+        console.log("Backend response:", response);
+        if (response.data.success) {
+          setCourses(response.data.courses);
+        } else {
+          setActionStatus("Error fetching courses.");
+        }
+      } catch (error) {
+        setActionStatus("Error fetching courses.");
+        console.error(error);
+      }
+    };
+
+    fetchCourses();
+  }, [teacherId]);
 
   const handleCourseSelect = (course) => {
     setSelectedCourse(course);
@@ -22,9 +43,11 @@ const AssignTask = () => {
 
   const handleAction = (action) => {
     if (action === "createTask") {
-      window.open("https://forms.google.com", "_blank"); 
+      window.open("https://forms.google.com", "_blank");
+      setActionStatus("Task creation form opened.");
     } else if (action === "postProblemsheet") {
       navigate("/upload-problemsheet", { state: { course: selectedCourse } });
+      setActionStatus("Navigating to post a problem sheet.");
     }
   };
 
@@ -35,27 +58,40 @@ const AssignTask = () => {
       </header>
 
       <div className="flex-1 p-4">
+        {actionStatus && (
+          <div className="bg-yellow-100 text-yellow-800 p-4 mb-4 rounded-md">
+            {actionStatus}
+          </div>
+        )}
+
         {!selectedCourse ? (
           <>
-            <h2 className="text-xl font-bold text-cl4 mb-6">
-              Select a Course to Assign Task
-            </h2>
+            <h2 className="text-xl font-bold text-cl4 mb-6">Select a Course to Assign Task</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <div
-                  key={course.id}
-                  className="bg-cl5 shadow-md rounded-lg p-6 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
-                  onClick={() => handleCourseSelect(course)}
-                >
-                  <h3 className="text-xl font-bold text-cl4">{course.name}</h3>
-                </div>
-              ))}
+              {courses.length > 0 ? (
+                courses.map((course) => (
+                  <div
+                    key={course._id}
+                    className="bg-cl5 shadow-md rounded-lg p-6 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
+                    onClick={() => handleCourseSelect(course)}
+                  >
+                    <h3 className="text-xl font-bold text-cl4">{course.name}</h3>
+                    {course.description.map((desc) => (
+                      <p key={desc._id} className="text-cl4">
+                        {desc.courseName} ({desc.courseCode})
+                      </p>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center text-cl4">No courses available.</div>
+              )}
             </div>
           </>
         ) : (
           <>
             <h2 className="text-xl font-bold text-cl4 mb-6">
-              {`Assign Task for ${selectedCourse.name}`}
+              Assign Task for {selectedCourse.name}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <button
