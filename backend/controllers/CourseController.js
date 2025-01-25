@@ -2,7 +2,7 @@ import CourseModel from "../models/Course.js";
 
 const listCourse = async (req, res) => {
     const {user} = req.body;
-    const code = user.slice(0,4).toupperCase();
+    const code = user.slice(0,4).toUpperCase();
 
     try{
         const course = await CourseModel.findAll({
