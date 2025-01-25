@@ -13,6 +13,7 @@ import UploadProblemSheet from "./components/UploadProblemSheet";
 import ViewSubmissions from "./components/ViewSubmissions";
 import PostAnnouncements from "./components/PostAnnouncements";
 import AssignmentsPage from "./components/Assignment";
+import ResourcePage from "./components/ResourcePage";
 const App = () => {
   return (
     <BrowserRouter>
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/view-submissions" element={<ViewSubmissions />} />
         <Route path="/post-announcements" element={<PostAnnouncements />} />
         <Route path="/course/:courseCode/assignments"element={<AssignmentsPage />} />
+        <Route path="/course/:courseCode/resources" element={<ResourcePage />} />
         
       </Routes>
     </BrowserRouter>

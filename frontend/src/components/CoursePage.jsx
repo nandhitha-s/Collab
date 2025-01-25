@@ -11,6 +11,10 @@ const CoursePage = () => {
     navigate(`/course/${course?.courseCode}/assignments`, { state: { course } });
   };
 
+  const handleResourcesClick = () => {
+    navigate(`/course/${course?.courseCode}/resources`, { state: { course } });
+  };
+
   return (
     <div className="flex flex-col h-screen bg-cl1">
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
@@ -33,7 +37,10 @@ const CoursePage = () => {
               <p className="text-cl4 text-sm">Check your assignments and due dates.</p>
             </div>
           </div>
-          <div className="bg-cl5 shadow-md rounded-lg p-6 space-y-4 flex items-center">
+          <div
+            className="bg-cl5 shadow-md rounded-lg p-6 space-y-4 flex items-center cursor-pointer"
+            onClick={handleResourcesClick}
+          >
             <img
               src="/assets/Resources.png"
               alt="Resources"
@@ -48,7 +55,7 @@ const CoursePage = () => {
 
         <section className="flex-1 bg-cl5 shadow-md rounded-lg p-6 mt-4 sm:mt-0 sm:w-full lg:w-2/3 xl:w-3/4">
           <h3 className="text-lg font-semibold text-cl4 mb-4">Faculty Announcements</h3>
-          
+
           <div className="bg-cl6 p-4 rounded-xl shadow-lg max-w-sm mx-auto">
             <p className="text-sm text-cl4">
               Classes are canceled for today. Please submit your assignment by the 23rd.

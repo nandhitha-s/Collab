@@ -46,7 +46,6 @@ const AssignmentsPage = () => {
                   key={idx}
                   className="bg-cl5 shadow-md rounded-lg p-4 flex flex-col md:flex-row md:justify-between md:items-center"
                 >
-                  {/* Title and Status Indicator */}
                   <div className="flex items-center mb-4 md:mb-0 md:w-1/3">
                     <div
                       className={`w-3 h-3 rounded-full mr-3 ${
@@ -62,7 +61,6 @@ const AssignmentsPage = () => {
                     </h4>
                   </div>
 
-                  {/* Assignment Details */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-sm text-cl4 md:w-2/3">
                     <div className="flex">
                       <p className="font-semibold w-24">Posted:</p>
