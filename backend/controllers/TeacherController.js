@@ -5,11 +5,11 @@ import AssignmentModel from "../models/Assignment.js";
 const addCourse = async (req, res) => {
     const {teacherId , courseId} = req.body;
     try {
-        const teacher = await TeacherModel.findByone(teacherId);
+        const teacher = await TeacherModel.find(teacherId);
         if(!teacher){
             return res.json({success:false,message:"Teacher does not exist"});
         }
-        const course = await CourseModel.findByAll(courseId);
+        const course = await CourseModel.find(courseId);
         if(!course){
             return res.json({success:false,message:"Course does not exist"});
         }
