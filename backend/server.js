@@ -23,13 +23,6 @@ app.use(
   })
 );
 
-mongoose
-  .connect(
-    "mongodb+srv://user1:user4022@cluster0.oqr6k.mongodb.net/collab?retryWrites=true&w=majority"
-  )
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
 app.get("/", (req, res) => {
   res.send("Connected");
 });
