@@ -1,8 +1,9 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const FacultyDashboard = () => {
+  const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
 
   const actions = [
@@ -12,12 +13,21 @@ const FacultyDashboard = () => {
     { name: "Post Announcements", path: "/post-announcements", description: "Share updates and announcements with your class." },
   ];
 
+  // Retrieve userName from localStorage when the component mounts
+  useEffect(() => {
+    const storedUserName = localStorage.getItem("userName");
+    if (storedUserName) {
+      setUserName(storedUserName); // Set userName from localStorage
+    }
+  }, []);
+
   return (
     <div className="flex flex-col h-screen bg-cl1">
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Faculty Dashboard</h1>
         <div className="flex items-center gap-4">
-          <p className="text-white text-s">Faculty ID: 67890</p>
+          {/* Displaying the user name if available, otherwise default to 'Faculty' */}
+          <p className="text-white text-s">Welcome, {userName || 'Faculty'}</p>
           <div className="w-10 h-10 rounded-full bg-cl1"></div>
         </div>
       </header>

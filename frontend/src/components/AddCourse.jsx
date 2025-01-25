@@ -1,22 +1,48 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const AddCourse = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [courses, setCourses] = useState([
-    { id: 1, name: "Software Engineering", credits: 3 },
-    { id: 2, name: "Data Structures", credits: 4 },
-    { id: 3, name: "Computer Networks", credits: 3 },
-    { id: 4, name: "Machine Learning", credits: 4 },
-    { id: 5, name: "Database Systems", credits: 3 },
-    { id: 6, name: "Cyber Security", credits: 3 },
-  ]);
-
+  const [courses, setCourses] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
+  const teacherId = "teacher_id_here"; 
 
-  const addCourseToAssignTask = (course) => {
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("/api/auth/course");
+
+        // Log the entire API response to the console
+        console.log(response);  // Logs the response object
+
+        if (response.data.success) {
+          setCourses(response.data.courses);
+        } else {
+          console.log("Failed to fetch courses:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const addCourseToAssignTask = async (course) => {
     if (!assignedCourses.find((assigned) => assigned.id === course.id)) {
-      setAssignedCourses([...assignedCourses, course]);
+      try {
+        const response = await axios.post("/api/auth/teacher/addCourse", {
+          teacherId,
+          courseId: course.id,
+        });
+        if (response.data.success) {
+          setAssignedCourses([...assignedCourses, course]);
+          alert(`${course.name} added successfully`);
+        } else {
+          alert(response.data.message);
+        }
+      } catch (error) {
+        alert("Error adding course");
+      }
     } else {
       alert(`${course.name} is already added to Assign Task.`);
     }
@@ -33,7 +59,7 @@ const AddCourse = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => (
             <div
-              key={course.id}
+              key={course._id}
               className="bg-cl5 shadow-md rounded-lg p-6 flex flex-col justify-between items-center text-center"
             >
               <h3 className="text-xl font-bold text-cl4">{course.name}</h3>

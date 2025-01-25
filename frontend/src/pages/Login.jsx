@@ -30,6 +30,7 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("userName", userName);
         localStorage.setItem("role", role);
+        // console.log("Complete JWT Token:", token);
 
         // Navigate based on role
         if (role === "student") {
@@ -43,29 +44,26 @@ const Login = () => {
         setErrorMessage(response.data.message);
       }
     } catch (error) {
-      console.error(error);
-      setErrorMessage("Something went wrong. Please try again.");
+      console.error("Error during login:", error);
+      setErrorMessage("Invalid username or password.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen bg-cl1">
       <form
         onSubmit={handleSubmit}
-        className="relative w-[400px] h-[550px] bg-cl5 rounded-xl shadow-xl border-cl3 flex flex-col p-6"
+        className="w-[400px] bg-cl5 p-6 rounded-lg shadow-lg"
       >
-        <div className="text-cl4 text-2xl font-bold mt-16">
-          <p>Welcome Back,</p>
-          <p>Log In!</p>
-        </div>
+        <h2 className="text-2xl font-bold text-center text-cl4">Log In</h2>
 
         {errorMessage && (
-          <p className="text-red-500 text-sm mt-4">{errorMessage}</p>
+          <p className="text-red-500 text-sm mt-4 text-center">{errorMessage}</p>
         )}
 
         <div className="mt-6">
           <label className="block text-sm font-medium text-cl4 mb-2">
-            USERNAME
+            Username
           </label>
           <input
             type="text"
@@ -79,7 +77,7 @@ const Login = () => {
 
         <div className="mt-4">
           <label className="block text-sm font-medium text-cl4 mb-2">
-            PASSWORD
+            Password
           </label>
           <div className="relative">
             <input
@@ -104,10 +102,10 @@ const Login = () => {
           type="submit"
           className="w-full bg-cl2 text-cl5 py-2 mt-6 rounded-lg shadow-md hover:bg-cl4 transition"
         >
-          Log in
+          Log In
         </button>
 
-        <div className="text-center mt-6 text-cl4 text-sm">
+        <div className="text-center mt-6 text-sm text-cl4">
           <p>
             Don’t have an account?{" "}
             <button
@@ -118,6 +116,7 @@ const Login = () => {
               Sign Up
             </button>
           </p>
+          
         </div>
       </form>
     </div>

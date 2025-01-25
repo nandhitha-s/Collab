@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,7 +6,7 @@ import axios from "axios";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
-  const [userName, setUserName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,7 +14,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
 
     if (!storedUserName || !token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 
@@ -21,26 +22,31 @@ const Dashboard = () => {
       try {
         const response = await axios.post(
           "http://localhost:5000/api/auth/course/dashboard",
-          { user: storedUserName },
+          { user: storedUserName }, // Send the username as 'user' in the body
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Include JWT token in the header
+              token, // Send the token in the header
             },
           }
         );
 
+        console.log("Backend Response:", response.data); // Log the response data
+
+        // Check if the request was successful
         if (response.data.success) {
-          setCourses(response.data.course); // Ensure backend sends the `course` key
+          setCourses(response.data.course); // Set courses with the response data
         } else {
-          console.error("Error:", response.data.message);
+          setErrorMessage(response.data.message || "Unable to fetch courses.");
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
 
-        // Redirect to login if token is invalid or expired
+        // Handle token-related errors (401, 403)
         if (error.response?.status === 401 || error.response?.status === 403) {
           localStorage.clear();
-          navigate("/login");
+          navigate("/");
+        } else {
+          setErrorMessage("An error occurred while fetching courses.");
         }
       } finally {
         setLoading(false);
@@ -52,7 +58,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   if (loading) {
@@ -65,7 +71,7 @@ const Dashboard = () => {
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-4">
-          <p className="text-white text-sm">Welcome, {userName}</p>
+          <p className="text-white text-sm">Welcome, {localStorage.getItem("userName")}</p>
           <div
             className="bg-white rounded-full p-1 cursor-pointer"
             onClick={handleLogout}
@@ -96,7 +102,7 @@ const Dashboard = () => {
           ))
         ) : (
           <div className="col-span-full text-center text-cl4 text-lg">
-            No courses found.
+            {errorMessage || "No courses found."}
           </div>
         )}
       </div>
