@@ -48,12 +48,12 @@ const listTeacherCourse = async (req, res) => {
 
   try {
 
-    const teacher = await TeacherModel.findone(teacherId);
+    const teacher = await TeacherModel.findOne({userId:teacherId});
     if (!teacher) {
       return res.json({ success: false, message: "Teacher does not exist" });
     }
     
-    const courses = await CourseModel.findByAll({
+    const courses = await CourseModel.find({
       "description.courseCode": { $in: teacher.teachingCourses }, 
     });
 
