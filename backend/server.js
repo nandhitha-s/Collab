@@ -17,7 +17,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://collab-tpl2.vercel.app/"],
+    origin: ["https://collab-frontend-putq.onrender.com"],
     methods: ["POST", "GET"],
     credentials: true,
   })
