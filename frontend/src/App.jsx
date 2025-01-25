@@ -12,6 +12,7 @@ import AssignTask from "./components/AssignTask";
 import UploadProblemSheet from "./components/UploadProblemSheet";
 import ViewSubmissions from "./components/ViewSubmissions";
 import PostAnnouncements from "./components/PostAnnouncements";
+import AssignmentsPage from "./components/Assignment";
 const App = () => {
   return (
     <BrowserRouter>
@@ -26,7 +27,8 @@ const App = () => {
         <Route path="/upload-problemsheet" element={<UploadProblemSheet />} />
         <Route path="/view-submissions" element={<ViewSubmissions />} />
         <Route path="/post-announcements" element={<PostAnnouncements />} />
-
+        <Route path="/course/:courseCode/assignments"element={<AssignmentsPage />} />
+        
       </Routes>
     </BrowserRouter>
   );
