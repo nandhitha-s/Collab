@@ -1,13 +1,14 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import LoadingPage from "./LoadingPage"; // Import LoadingPage component
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -16,6 +17,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true during API call
 
     try {
       const response = await axios.post("http://localhost:5000/api/auth/user/login", {
@@ -26,13 +28,10 @@ const Login = () => {
       if (response.data.success) {
         const { token, role } = response.data;
 
-        // Store user data in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("userName", userName);
         localStorage.setItem("role", role);
-        // console.log("Complete JWT Token:", token);
 
-        // Navigate based on role
         if (role === "student") {
           navigate("/dashboard");
         } else if (role === "teacher") {
@@ -46,8 +45,14 @@ const Login = () => {
     } catch (error) {
       console.error("Error during login:", error);
       setErrorMessage("Invalid username or password.");
+    } finally {
+      setLoading(false); // Set loading to false after API call
     }
   };
+
+  if (loading) {
+    return <LoadingPage />; // Show loading page while loading
+  }
 
   return (
     <div className="flex items-center justify-center h-screen bg-cl1">
@@ -62,9 +67,7 @@ const Login = () => {
         )}
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-cl4 mb-2">
-            Username
-          </label>
+          <label className="block text-sm font-medium text-cl4 mb-2">Username</label>
           <input
             type="text"
             placeholder="Enter your username"
@@ -76,9 +79,7 @@ const Login = () => {
         </div>
 
         <div className="mt-4">
-          <label className="block text-sm font-medium text-cl4 mb-2">
-            Password
-          </label>
+          <label className="block text-sm font-medium text-cl4 mb-2">Password</label>
           <div className="relative">
             <input
               type={passwordVisible ? "text" : "password"}
@@ -116,7 +117,6 @@ const Login = () => {
               Sign Up
             </button>
           </p>
-
         </div>
       </form>
     </div>

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import LoadingPage from "./LoadingPage"; // Import the LoadingPage component
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -22,22 +23,22 @@ const Dashboard = () => {
       try {
         const response = await axios.post(
           "http://localhost:5000/api/auth/course/dashboard",
-          { userName: storedUserName }, 
+          { userName: storedUserName },
           {
             headers: {
-              token, 
+              token,
             },
           }
         );
 
-        console.log("Backend Response:", response.data); 
+        console.log("Backend Response:", response.data);
 
         if (response.data.success) {
           const coursesData = response.data.courseCodes.map((code, index) => ({
             courseCode: code,
             courseName: response.data.courseNames[index],
           }));
-          setCourses(coursesData); 
+          setCourses(coursesData);
         } else {
           setErrorMessage(response.data.message || "Unable to fetch courses.");
         }
@@ -51,7 +52,7 @@ const Dashboard = () => {
           setErrorMessage("An error occurred while fetching courses.");
         }
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading once the request is complete
       }
     };
 
@@ -63,8 +64,9 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  // Render the LoadingPage while fetching data
   if (loading) {
-    return <div className="text-center mt-20">Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (
@@ -72,7 +74,9 @@ const Dashboard = () => {
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-4">
-          <p className="text-white text-sm">Welcome, {localStorage.getItem("userName")}</p>
+          <p className="text-white text-sm">
+            Welcome, {localStorage.getItem("userName")}
+          </p>
           <div
             className="bg-white rounded-full p-1 cursor-pointer"
             onClick={handleLogout}

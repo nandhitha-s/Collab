@@ -14,6 +14,7 @@ import ViewSubmissions from "./components/ViewSubmissions";
 import PostAnnouncements from "./components/PostAnnouncements";
 import AssignmentsPage from "./components/Assignment";
 import ResourcePage from "./components/ResourcePage";
+import LoadingPage from "./pages/LoadingPAge";
 const App = () => {
   return (
     <BrowserRouter>
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/post-announcements" element={<PostAnnouncements />} />
         <Route path="/course/:courseCode/assignments"element={<AssignmentsPage />} />
         <Route path="/course/:courseCode/resources" element={<ResourcePage />} />
+        <Route path="/loading" element={<LoadingPage/>}/>
         
       </Routes>
     </BrowserRouter>

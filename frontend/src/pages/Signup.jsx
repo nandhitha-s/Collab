@@ -1,15 +1,16 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import LoadingPage from "./LoadingPage"; // Import LoadingPage component
 
 const SignUp = () => {
-  const [userName, setUserName] = useState(""); 
+  const [userName, setUserName] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("student");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -18,6 +19,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true during API call
 
     try {
       const response = await axios.post("http://localhost:5000/api/auth/user/register", {
@@ -35,8 +37,14 @@ const SignUp = () => {
     } catch (error) {
       console.error(error);
       setErrorMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after API call
     }
   };
+
+  if (loading) {
+    return <LoadingPage />; // Show loading page while loading
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -54,9 +62,7 @@ const SignUp = () => {
         )}
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-cl4 mb-2">
-            USERNAME
-          </label>
+          <label className="block text-sm font-medium text-cl4 mb-2">USERNAME</label>
           <input
             type="text"
             placeholder="Enter your username"
@@ -68,9 +74,7 @@ const SignUp = () => {
         </div>
 
         <div className="mt-4">
-          <label className="block text-sm font-medium text-cl4 mb-2">
-            NAME
-          </label>
+          <label className="block text-sm font-medium text-cl4 mb-2">NAME</label>
           <input
             type="text"
             placeholder="Enter your name"
@@ -82,9 +86,7 @@ const SignUp = () => {
         </div>
 
         <div className="mt-4">
-          <label className="block text-sm font-medium text-cl4 mb-2">
-            ROLE
-          </label>
+          <label className="block text-sm font-medium text-cl4 mb-2">ROLE</label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
@@ -97,9 +99,7 @@ const SignUp = () => {
         </div>
 
         <div className="mt-4">
-          <label className="block text-sm font-medium text-cl4 mb-2">
-            PASSWORD
-          </label>
+          <label className="block text-sm font-medium text-cl4 mb-2">PASSWORD</label>
           <div className="relative">
             <input
               type={passwordVisible ? "text" : "password"}
