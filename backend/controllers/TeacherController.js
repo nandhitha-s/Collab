@@ -1,5 +1,6 @@
 import TeacherModel from "../models/Teacher.js";
 import CourseModel from "../models/Course.js";
+import AssignmentModel from "../models/Assignment.js";
 
 const addCourse = async (req, res) => {
     const {teacherId , courseId} = req.body;
@@ -44,5 +45,31 @@ const listTeacherCourse = async (req, res) => {
   }
 };
 
-export default {addCourse,listTeacherCourse}; 
+const addAssignment = async (req, res) => {
+  const {teacherId , courseId , title , file} = req.body;
+  try {
+      const teacher = await TeacherModel.findByone(teacherId);
+      if(!teacher){
+          return res.json({success:false,message:"Teacher does not exist"});
+      }
+      const course = await CourseModel.findByone(courseId);
+      if(!course){
+          return res.json({success:false,message:"Course does not exist"});
+      }
+      const assignment = new AssignmentModel({
+        courseId,
+        teacherId,
+        title: title,
+        file: file,
+      });
+      await assignment.save();
+      return res.json({success:true,message:"Assignment added successfully"});
+  } catch (error) {
+      console.log(error);
+      res.json({ success: false, message: "Error adding assignment" });
+  }
+};
+
+
+export default {addCourse,listTeacherCourse,addAssignment}; 
 
