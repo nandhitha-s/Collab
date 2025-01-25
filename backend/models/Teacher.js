@@ -4,7 +4,7 @@ const TeacherSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // References User
     name: { type: String, required: true },
-    teachingCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }], // References Courses
+    teachingCourses: [{ type: String}], 
   },
   { timestamps: true }
 );

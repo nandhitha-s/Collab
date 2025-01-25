@@ -2,36 +2,47 @@ import TeacherModel from "../models/Teacher.js";
 import CourseModel from "../models/Course.js";
 import AssignmentModel from "../models/Assignment.js";
 
+
 const addCourse = async (req, res) => {
   const { teacherId, courseId } = req.body;
   try {
-      // Find the teacher using the teacherId
-      const teacher = await TeacherModel.find({ userId: teacherId });
-      if (!teacher) {
-          return res.json({ success: false, message: "Teacher does not exist" });
-      }
-      console.log(teacher);
+    // Validate teacherId as a string
+    if (typeof teacherId !== "string" || teacherId.trim() === "") {
+        return res.json({ success: false, message: "Invalid teacherId format" });
+    }
 
-      // Find the course using the courseId
-      const course = await CourseModel.find({ name: courseId });
-      if (!course) {
-          return res.json({ success: false, message: "Course does not exist" });
-      }
+    // Find teacher by userId
+    const teacher = await TeacherModel.findOne({ userId: teacherId });
+    if (!teacher) {
+        return res.json({ success: false, message: "Teacher does not exist" });
+    }
+console.log(teacher);
+    // Find courses by
+   const courses = await CourseModel.find({
+       "description.courseCode": { $in: courseId },
+   });
+   
+  if (!courses || courses.length === 0) {
+      return res.json({ success: false, message: "No matching courses found" });
+   }
 
-      // Extract course codes (assuming description is an array of objects)
-      const courseCodes = course.description.map((desc) => desc.courseCode);
+  // Extract course codes and add to teacher's teachingCourses
+   const courseCodes = courses.flatMap((course) =>
+       course.description
+           .filter((desc) => courseId.includes(desc.courseCode))
+           .map((desc) => desc.courseCode)
+   );
+   console.log(courseCodes);
+   const updatedCourses = [...new Set([...teacher.teachingCourses, ...courseId])];
+   teacher.teachingCourses = updatedCourses;
+   const updatedTeacher = await teacher.save();
 
-      // Add course codes to teacher's teachingCourses
-      teacher.teachingCourses.push(...courseCodes);
-      await teacher.save();
-
-      return res.json({ success: true, message: "Course added successfully" });
-  } catch (error) {
-      console.error(error);
-      res.json({ success: false, message: "Error adding course" });
-  }
+  return res.json({ success: true, message: "Courses added successfully",updatedCourses });
+} catch (error) {
+  console.error(error);
+  return res.status(500).json({ success: false, message: "Error adding course" });
+}
 };
-
 const listTeacherCourse = async (req, res) => {
   const { teacherId } = req.body;
 
