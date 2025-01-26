@@ -167,7 +167,6 @@ const listAssignmentsForStudent = async (req, res) => {
     }
     // Find assignments for the student (submissions)
     const assignments = await AssignmentModel.find({courseId:courseId});
-    console.log(assignments);
     return res.json({ success: true, assignments });
   } catch (error) {
     console.error("Error listing assignments for student:", error);
