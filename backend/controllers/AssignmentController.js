@@ -126,7 +126,7 @@ const gradeAssignment = async (req, res) => {
     // Save the updated assignment
     const updatedAssignment = await assignment.save();
 
-    return res.json({ success: true, message: "Assignment graded successfully", assignment: updatedAssignment });
+    return res.json({ success: true, message: "Assignment graded successfully" });
   } catch (error) {
     console.error("Error grading assignment:", error);
     return res.json({ success: false, message: "Error grading assignment" });
