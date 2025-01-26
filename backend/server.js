@@ -7,6 +7,7 @@ import courseRouter from "./routes/CourseRoute.js";
 import authMiddleware from "./middleware/auth.js";
 import teacherRouter from "./routes/TeacherRoute.js";
 import announcementRouter from "./routes/AnnouncementRoute.js";
+import assignmentRouter from "./routes/AssignmentRoute.js";
 import mongoose from "mongoose";
 
 dotenv.config(); 
@@ -34,6 +35,7 @@ app.use("/api/auth/user", userRouter);
 app.use("/api/auth/course", courseRouter);
 app.use("/api/auth/teacher", teacherRouter);
 app.use("/api/auth/announcement", announcementRouter);
+app.use("/api/auth/assignment", assignmentRouter);
 
 app.listen(port, () => {
   console.log(`Running on port ${port}`);
