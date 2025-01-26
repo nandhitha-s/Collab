@@ -91,7 +91,7 @@ const addAssignment = async (req, res) => {
       console.log(error);
       res.json({ success: false, message: "Error adding assignment" });
   }
-};
+};//route
 
 
 export default {addCourse,listTeacherCourse,addAssignment}; 
