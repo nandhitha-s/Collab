@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import LoadingPage from "./LoadingPage"; // Import LoadingPage component
+import LoadingPage from "./LoadingPage"; 
 
 const SignUp = () => {
   const [userName, setUserName] = useState("");
@@ -10,7 +10,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -19,7 +19,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true during API call
+    setLoading(true); 
 
     try {
       const response = await axios.post("http://localhost:5000/api/auth/user/register", {
@@ -38,12 +38,12 @@ const SignUp = () => {
       console.error(error);
       setErrorMessage("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false after API call
+      setLoading(false); 
     }
   };
 
   if (loading) {
-    return <LoadingPage />; // Show loading page while loading
+    return <LoadingPage />; 
   }
 
   return (

@@ -9,7 +9,7 @@ const AssignTask = () => {
   const [actionStatus, setActionStatus] = useState("");
   const [file, setFile] = useState(null); 
   const [assignmentTitle, setAssignmentTitle] = useState(""); 
-  const teacherId = localStorage.getItem("userName"); 
+  const teacherId = localStorage.getItem("userName"); // Get teacher ID from localStorage
 
   useEffect(() => {
     if (!teacherId) {
@@ -20,7 +20,7 @@ const AssignTask = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/teacher/listTeacherCourse",
+          "http://localhost:5000/api/auth/teacher/listTeacherCourse", // Adjusted endpoint
           { teacherId }
         );
 
@@ -50,40 +50,39 @@ const AssignTask = () => {
     setSelectedCourse(course);
   };
 
-  const [fileId, setFileId] = useState(null);
+  // Convert the file to base64 format before submission
+  const fileToBase64 = (file) => 
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(",")[1]); // Extract base64 string
+      reader.onerror = (error) => reject(error);
+    });
 
   const handleAssignmentSubmit = async () => {
     if (!assignmentTitle || !file || !selectedCourse) {
       setActionStatus("Please fill in all fields and upload a file.");
       return;
     }
-  
+
     try {
-      const fileToBase64 = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file); 
-          reader.onload = () => resolve(reader.result.split(",")[1]); 
-          reader.onerror = (error) => reject(error);
-        });
-  
       const base64File = await fileToBase64(file);
-  
+
       const payload = {
-        teacherId, 
-        courseId: selectedCourse.courseCode, 
-        title: assignmentTitle,
-        file: base64File, 
+        teacherId, // Teacher ID from localStorage
+        courseId: selectedCourse.courseCode, // Course code selected
+        title: assignmentTitle, // Title of the assignment
+        file: base64File, // File converted to base64
       };
-  
+
       const response = await axios.post(
-        "http://localhost:5000/api/auth/assignment/addAssignment",
+        "http://localhost:5000/api/auth/assignment/addAssignment", // Updated endpoint
         payload,
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-  
+
       if (response.data.success) {
         setActionStatus("Assignment added successfully!");
       } else {
@@ -93,8 +92,6 @@ const AssignTask = () => {
       setActionStatus("Error adding assignment. Please try again later.");
     }
   };
- 
-  
 
   return (
     <div className="flex flex-col min-h-screen bg-cl1">

@@ -5,10 +5,8 @@ import { motion } from "framer-motion";
 const LoadingPage = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 flex-col">
-      {/* Loading text */}
       <p className="text-lg font-semibold text-gray-700 mb-4">Loading...</p>
 
-      {/* Animated spinner */}
       <motion.div
         className="w-24 h-24"
         animate={{ rotate: 360 }}

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import LoadingPage from "./LoadingPage"; // Import the LoadingPage component
+import LoadingPage from "./LoadingPage"; 
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [chatMessages, setChatMessages] = useState({}); // Store chat messages for each course
-  const [newMessage, setNewMessage] = useState(""); // Track new message input
-  const [activeChat, setActiveChat] = useState(null); // Track active chat for a course
+  const [chatMessages, setChatMessages] = useState({}); 
+  const [newMessage, setNewMessage] = useState(""); 
+  const [activeChat, setActiveChat] = useState(null); 
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
@@ -73,7 +73,7 @@ const Dashboard = () => {
       ...prev,
       [courseCode]: [...(prev[courseCode] || []), newMessage],
     }));
-    setNewMessage(""); // Clear the input
+    setNewMessage(""); 
   };
 
   if (loading) {
@@ -128,7 +128,6 @@ const Dashboard = () => {
                 Chat
               </button>
 
-              {/* Chat Section */}
               {activeChat === course.courseCode && (
                 <div className="w-full mt-4 p-4 bg-white shadow-md rounded-lg">
                   <h4 className="text-cl4 font-semibold mb-2">Chat</h4>

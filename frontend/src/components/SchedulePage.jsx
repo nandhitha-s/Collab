@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 
 const SchedulePage = () => {
@@ -72,7 +73,6 @@ const SchedulePage = () => {
       </header>
 
       <div className="flex flex-1 flex-col lg:flex-row p-6 gap-6">
-        {/* Weekly Schedule */}
         <section className="flex-1 bg-cl5 shadow-lg rounded-lg p-6 space-y-4">
           <h3 className="text-lg font-semibold text-cl4 mb-4">Weekly Schedule</h3>
           {currentWeek.length > 0 ? (
@@ -100,7 +100,6 @@ const SchedulePage = () => {
           )}
         </section>
 
-        {/* Monthly Calendar */}
         <section className="flex-1 bg-cl5 shadow-lg rounded-lg p-6 space-y-4">
           <h3 className="text-lg font-semibold text-cl4 mb-4">Monthly Calendar</h3>
           {schedule.length > 0 ? (
