@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const AssignmentSchema = new mongoose.Schema(
   {
     courseId: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Course", 
+      type: String, 
       required: true 
     }, // References Course
     teacherId: { 
