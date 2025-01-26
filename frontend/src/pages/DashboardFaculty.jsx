@@ -80,7 +80,7 @@ const FacultyDashboard = () => {
   return (
     <div className="flex flex-col min-h-screen bg-cl1">
       {/* Header */}
-      <header className="bg-cl4 text-white flex justify-between items-center p-4">
+      <header className="bg-cl4 text-white flex justify-between items-center p-4 sticky top-0 z-10 shadow-lg">
         <h1 className="text-2xl font-bold">Faculty Dashboard</h1>
         <div className="flex items-center gap-4">
           <p className="text-white text-sm hidden sm:block">
@@ -141,20 +141,20 @@ const FacultyDashboard = () => {
           </div>
 
           {/* Holidays Section */}
-       <div className="bg-white shadow-lg rounded-2xl p-6">
-  <h2 className="text-xl font-bold text-cl4 mb-4">Upcoming Holidays</h2>
-  <ul className="divide-y divide-gray-300 max-h-60 overflow-y-scroll">
-    {holidays.map((holiday, idx) => (
-      <li
-        key={idx}
-        className="flex justify-between items-center py-2 text-cl4"
-      >
-        <span className="font-semibold">{holiday.date}</span>
-        <span className="text-gray-600">{holiday.name}</span>
-      </li>
-    ))}
-  </ul>
-</div>
+          <div className="bg-white shadow-lg rounded-2xl p-6">
+            <h2 className="text-xl font-bold text-cl4 mb-4">Upcoming Holidays</h2>
+            <ul className="divide-y divide-gray-300 max-h-60 overflow-y-scroll">
+              {holidays.map((holiday, idx) => (
+                <li
+                  key={idx}
+                  className="flex justify-between items-center py-2 text-cl4"
+                >
+                  <span className="font-semibold">{holiday.date}</span>
+                  <span className="text-gray-600">{holiday.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

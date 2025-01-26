@@ -57,13 +57,13 @@ const AssignTask = () => {
       setActionStatus("Please fill in all fields and upload a file.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("teacherId", teacherId);
     formData.append("courseId", selectedCourse.id);
     formData.append("title", assignmentTitle);
     formData.append("file", file);
-  
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/assignment/addAssignment",
@@ -72,10 +72,10 @@ const AssignTask = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-  
+
       if (response.data.success) {
         setActionStatus("Assignment added successfully!");
-        setFileId(response.data.fileId);  // Store the file ID here if needed
+        setFileId(response.data.fileId); // Store the file ID here if needed
       } else {
         setActionStatus(response.data.message);
       }
@@ -83,7 +83,6 @@ const AssignTask = () => {
       setActionStatus("Error adding assignment. Please try again later.");
     }
   };
-  
 
   return (
     <div className="flex flex-col min-h-screen bg-cl1">
@@ -105,12 +104,17 @@ const AssignTask = () => {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.length > 0 ? (
-                courses.map((course) => (
+                courses.map((course, index) => (
                   <div
-                    key={course.id}
+                    key={index}
                     className="bg-cl5 shadow-md rounded-lg p-4 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
                     onClick={() => handleCourseSelect(course)}
                   >
+                    <img
+                      src="/assets/leadership.png"
+                      alt="Course"
+                      className="w-24 h-24 mb-4 object-cover rounded-full" // Adjust size as needed
+                    />
                     <h3 className="text-xl font-bold text-cl4">
                       {course.courseParentName}
                     </h3>
