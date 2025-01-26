@@ -2,31 +2,75 @@ import AssignmentModel from "../models/Assignment.js";
 import TeacherModel from "../models/Teacher.js";
 import StudentModel from "../models/Student.js";
 import UserModel from "../models/User.js";
-//import upload from "../middleware/upload.js";
-import exp from "constants";
-import multer from "multer";
-
-// Set up multer storage and file destination
- // Create multer instanc  // Create the multer instance with storage options
 
 
-// Add an Assignment
 const addAssignment = async (req, res) => {
   try {
-    const { teacherId, courseId, title } = req.body;
-    console.log(req.body);
-    // console.log(req.file);
-    // console.log(teacherId, courseId, title);
+    const { teacherId, courseId, title, file } = req.body;
+
+    // Validate request body
+    if (!teacherId || !courseId || !title || !file) {
+      return res.status(400).json({ success: false, message: "Invalid input data" });
+    }
 
     // Check if teacher exists
     const user = await UserModel.findOne({ username: teacherId });
     if (!user) {
-      return res.json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
     const teacher = await TeacherModel.findOne({ userId: user._id });
     if (!teacher) {
-      return res.json({ success: false, message: "Teacher does not exist" });
+      return res.status(404).json({ success: false, message: "Teacher does not exist" });
+    }
+
+    // Check if an assignment already exists for the given course and teacher
+    let assignment = await AssignmentModel.findOne({ courseId, teacherId: teacher._id });
+
+    if (!assignment) {
+      // If not, create a new assignment
+      assignment = new AssignmentModel({
+        courseId,
+        teacherId: teacher._id,
+        title,
+        file: { filename: file },
+      });
+    } else {
+      // Update the existing assignment
+      assignment.title = title;
+      assignment.file = { filename: file };
+    }
+
+    // Save the assignment
+    const updatedAssignment = await assignment.save();
+    return res.json({
+      success: true,
+      message: "Assignment added/updated successfully",
+      assignment: updatedAssignment,
+    });
+  } catch (error) {
+    console.error("Error adding assignment:", error);
+    return res.status(500).json({ success: false, message: "Error adding assignment" });
+  }
+};
+
+export default { addAssignment };
+
+//Submit an Assignment
+const submitAssignment = async (req, res) => {
+  try {
+    const { studentId, courseId, title, file } = req.body;
+
+    // Check if student exists
+    const student = await StudentModel.findById(studentId);
+    if (!student) {
+      return res.json({ success: false, message: "Student not found" });
+    }
+
+    // Check if assignment exists
+    const assignment = await AssignmentModel.findone({courseId:courseId});
+    if (!assignment) {
+      return res.json({ success: false, message: "Assignment not found" });
     }
 
     // Ensure a file is uploaded
@@ -36,71 +80,28 @@ const addAssignment = async (req, res) => {
 
     const { filename, contentType, id: fileId } = req.file;
 
-    // Save the assignment
-    const updatedAssignment = await AssignmentModel.findOneAndUpdate(
-      { courseId, teacherId: teacher._id },
+    // Add submission to the assignment
+    const updatedAssignment = await AssignmentModel.findByIdAndUpdate(
+      assignmentId,
       {
-        $push: { file: { filename, contentType, fileId } },
-        title,
+        $push: {
+          submissions: {
+            studentId,
+            submittedFile: { filename, contentType, fileId },
+            submittedAt: new Date(),
+            status: "pending",
+          },
+        },
       },
-      { upsert: true, new: true }
+      { new: true }
     );
 
-    return res.json({ success: true, message: "Assignment added successfully", assignment: updatedAssignment });
+    return res.json({ success: true, message: "Assignment submitted successfully", assignment: updatedAssignment });
   } catch (error) {
-    console.error("Error adding assignment:", error);
-    return res.json({ success: false, message: "Error adding assignment" });
+    console.error("Error submitting assignment:", error);
+    return res.json({ success: false, message: "Error submitting assignment" });
   }
 };
-
-export default {addAssignment};
-
-// Submit an Assignment
-// const submitAssignment = async (req, res) => {
-//   try {
-//     const { studentId, assignmentId } = req.body;
-
-//     // Check if student exists
-//     const student = await StudentModel.findById(studentId);
-//     if (!student) {
-//       return res.json({ success: false, message: "Student not found" });
-//     }
-
-//     // Check if assignment exists
-//     const assignment = await AssignmentModel.findById(assignmentId);
-//     if (!assignment) {
-//       return res.json({ success: false, message: "Assignment not found" });
-//     }
-
-//     // Ensure a file is uploaded
-//     if (!req.file) {
-//       return res.json({ success: false, message: "No file uploaded" });
-//     }
-
-//     const { filename, contentType, id: fileId } = req.file;
-
-//     // Add submission to the assignment
-//     const updatedAssignment = await AssignmentModel.findByIdAndUpdate(
-//       assignmentId,
-//       {
-//         $push: {
-//           submissions: {
-//             studentId,
-//             submittedFile: { filename, contentType, fileId },
-//             submittedAt: new Date(),
-//             status: "pending",
-//           },
-//         },
-//       },
-//       { new: true }
-//     );
-
-//     return res.json({ success: true, message: "Assignment submitted successfully", assignment: updatedAssignment });
-//   } catch (error) {
-//     console.error("Error submitting assignment:", error);
-//     return res.json({ success: false, message: "Error submitting assignment" });
-//   }
-// };
 
 // // Grade an Assignment
 // const gradeAssignment = async (req, res) => {

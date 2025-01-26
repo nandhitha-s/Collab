@@ -16,8 +16,7 @@ const app = express();
 const port = process.env.PORT;
 
 
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded());
+app.use(express.json({ limit: "100mb" }));
 app.use(
   cors({
     //origin: ["https://collab-frontend-putq.onrender.com","http://localhost:5173"],
