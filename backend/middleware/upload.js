@@ -1,20 +1,17 @@
-import multer from "multer";
-import { GridFsStorage } from "multer-gridfs-storage";
-import { connectDB } from "../config/db.js"; 
-import "dotenv/config";
+import multer from 'multer';
+import { GridFsStorage } from 'multer-gridfs-storage';  // Correct import for ES module
 
-connectDB();
-
+// Configure the storage
 const storage = new GridFsStorage({
-  url: process.env.MONGO_URL,
+  url: process.env.MONGO_URL, // MongoDB URL from environment
   file: (req, file) => {
     return {
-      filename: `${Date.now()}-${file.originalname}`, 
-      bucketName: "uploads", 
+      bucketName: 'uploads',  // Specify bucket name
+      filename: `${Date.now()}-${file.originalname}`,  // Custom file naming
     };
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage });  // Using the configured storage
 
 export default upload;
