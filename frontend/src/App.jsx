@@ -14,7 +14,7 @@ import ViewSubmissions from "./components/ViewSubmissions";
 import PostAnnouncements from "./components/PostAnnouncements";
 import AssignmentsPage from "./components/Assignment";
 import ResourcePage from "./components/ResourcePage";
-import LoadingPage from "./pages/LoadingPAge";
+import LoadingPage from "./pages/LoadingPage";
 import SchedulePage from "./components/SchedulePage";
 const App = () => {
   return (
