@@ -1,8 +1,6 @@
 import express from "express";
 import AssignmentController from "../controllers/AssignmentController.js";
 
-
-// Destructure the required functions from the controller
 const { addAssignment, 
         submitAssignment,
         gradeAssignment,

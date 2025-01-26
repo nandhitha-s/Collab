@@ -180,5 +180,6 @@ export default{ addAssignment,
                 submitAssignment, 
                 gradeAssignment, 
                 listAssignmentsForTeacher,
-                listAssignmentsForStudent};
+                listAssignmentsForStudent
+              };
 
