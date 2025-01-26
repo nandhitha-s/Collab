@@ -5,7 +5,7 @@ import axios from "axios";
 const AddCourse = () => {
   const [courseList, setCourseList] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
-  const teacherId = localStorage.getItem("userName"); // Get teacherId from localStorage
+  const teacherId = localStorage.getItem("userName"); 
 
   useEffect(() => {
     const fetchAllCourses = async () => {
@@ -61,7 +61,7 @@ const AddCourse = () => {
         const response = await axios.post(
           "http://localhost:5000/api/auth/teacher/addCourse",
           {
-            teacherId, // Use teacherId as username
+            teacherId, 
             courseId: [course.code],
           }
         );

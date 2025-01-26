@@ -28,21 +28,18 @@ const ViewSubmissions = () => {
     },
   ]);
 
-  // Function to generate PDF for a course
   const generatePDF = (course) => {
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text(course.name, 10, 10);
     doc.setFontSize(12);
 
-    // Add Submitted Students
     doc.text("Submitted Students:", 10, 20);
     const submittedStudents = course.submissions.filter((s) => s.status === "Submitted");
     submittedStudents.forEach((student, index) => {
       doc.text(`${index + 1}. ${student.name}`, 10, 30 + index * 10);
     });
 
-    // Add Pending Students
     doc.text("Pending Students:", 10, 30 + submittedStudents.length * 10 + 5);
     const pendingStudents = course.submissions.filter((s) => s.status === "Pending");
     pendingStudents.forEach((student, index) => {
@@ -54,12 +51,10 @@ const ViewSubmissions = () => {
 
   return (
     <div className="flex flex-col h-screen bg-cl1">
-      {/* Header */}
       <header className="bg-cl4 text-white flex justify-between items-center p-4 shadow-lg">
         <h1 className="text-2xl font-bold">View Submissions</h1>
       </header>
 
-      {/* Main Content */}
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => {
@@ -97,7 +92,6 @@ const ViewSubmissions = () => {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Submitted Students */}
                   <div className="flex flex-col">
                     <h3 className="text-lg font-semibold text-cl4 mb-2">Submitted:</h3>
                     <div className="space-y-2">
@@ -112,7 +106,6 @@ const ViewSubmissions = () => {
                     </div>
                   </div>
 
-                  {/* Pending Students */}
                   <div className="flex flex-col">
                     <h3 className="text-lg font-semibold text-cl4 mb-2">Pending:</h3>
                     <div className="max-h-48 overflow-y-auto space-y-2">
