@@ -19,17 +19,8 @@ const AssignmentSchema = new mongoose.Schema(
       filename: {
         type: String,
         required: true,
-      }, // The filename of the PDF
-      contentType: {
-        type: String,
-        required: true,
-        enum: ["application/pdf"], // Ensures only PDFs are allowed
-      }, // MIME Type
-      fileId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "File",
-        required: true,
-      }, // Reference to GridFS file ID
+      }
+
     },
     submissions: [
       {
@@ -39,30 +30,20 @@ const AssignmentSchema = new mongoose.Schema(
           required: true,
         }, // References Student
         submittedFile: {
-          filename: { type: String, required: true }, // The filename of the submitted PDF
-          contentType: {
-            type: String,
-            required: true,
-            enum: ["application/pdf"],
-          }, // Ensures only PDFs
-          fileId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "File",
-            required: true,
-          }, // Reference to GridFS file ID
+          filename: { type: String, required: true }, 
         },
-        submittedAt: { type: Date, default: Date.now }, // Submission Date
+        submittedAt: { type: Date, default: Date.now }, 
         status: {
           type: String,
           enum: ["pending", "completed"],
-          default: "pending", // Initially, it's 'pending' when no submission
-        }, // Status of the submission
+          default: "pending", 
+        },
         grade: {
           type: Number,
           min: 0,
           max: 100,
-          default: null, // Grade will be null until it's graded
-        }, // Grade (out of 100)
+          default: null, 
+        }, 
       },
     ],
   },
