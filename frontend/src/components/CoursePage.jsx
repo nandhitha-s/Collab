@@ -1,11 +1,32 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CoursePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { course } = location.state || {};
+  const [announcements, setAnnouncements] = useState([]);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/auth/announcement/listCourseAnnouncement",
+          { courseCode: course?.courseCode }
+        );
+        if (response.data.success) {
+          setAnnouncements(response.data.announcements.flatMap((a) => a.messages));
+        }
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    };
+
+    if (course?.courseCode) {
+      fetchAnnouncements();
+    }
+  }, [course?.courseCode]);
 
   const handleAssignmentsClick = () => {
     navigate(`/course/${course?.courseCode}/assignments`, { state: { course } });
@@ -56,11 +77,23 @@ const CoursePage = () => {
         <section className="flex-1 bg-cl5 shadow-md rounded-lg p-6 mt-4 sm:mt-0 sm:w-full lg:w-2/3 xl:w-3/4">
           <h3 className="text-lg font-semibold text-cl4 mb-4">Faculty Announcements</h3>
 
-          <div className="bg-cl6 p-4 rounded-xl shadow-lg max-w-sm mx-auto">
-            <p className="text-sm text-cl4">
-              Classes are canceled for today. Please submit your assignment by the 23rd.
-            </p>
-          </div>
+          {announcements.length > 0 ? (
+            <div className="space-y-4">
+              {announcements.map((announcement, index) => (
+                <div
+                  key={index}
+                  className="bg-cl6 p-4 rounded-xl shadow-lg max-w-sm mx-auto"
+                >
+                  <p className="text-sm text-cl4">{announcement.msg}</p>
+                  <p className="text-xs text-cl4 mt-2">
+                    {new Date(announcement.timestamp).toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-cl4">No announcements available.</p>
+          )}
         </section>
       </div>
     </div>

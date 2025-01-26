@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +8,9 @@ const Dashboard = () => {
   const [courses, setCourses] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [chatMessages, setChatMessages] = useState({}); // Store chat messages for each course
+  const [newMessage, setNewMessage] = useState(""); // Track new message input
+  const [activeChat, setActiveChat] = useState(null); // Track active chat for a course
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
@@ -31,8 +33,6 @@ const Dashboard = () => {
           }
         );
 
-        console.log("Backend Response:", response.data);
-
         if (response.data.success) {
           const coursesData = response.data.courseCodes.map((code, index) => ({
             courseCode: code,
@@ -43,8 +43,6 @@ const Dashboard = () => {
           setErrorMessage(response.data.message || "Unable to fetch courses.");
         }
       } catch (error) {
-        console.error("Error fetching courses:", error);
-
         if (error.response?.status === 401 || error.response?.status === 403) {
           localStorage.clear();
           navigate("/");
@@ -52,7 +50,7 @@ const Dashboard = () => {
           setErrorMessage("An error occurred while fetching courses.");
         }
       } finally {
-        setLoading(false); // Stop loading once the request is complete
+        setLoading(false);
       }
     };
 
@@ -64,7 +62,20 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  // Render the LoadingPage while fetching data
+  const handleChatToggle = (courseCode) => {
+    setActiveChat(activeChat === courseCode ? null : courseCode);
+  };
+
+  const handleSendMessage = (courseCode) => {
+    if (!newMessage.trim()) return;
+
+    setChatMessages((prev) => ({
+      ...prev,
+      [courseCode]: [...(prev[courseCode] || []), newMessage],
+    }));
+    setNewMessage(""); // Clear the input
+  };
+
   if (loading) {
     return <LoadingPage />;
   }
@@ -96,12 +107,57 @@ const Dashboard = () => {
             <div
               key={idx}
               className="bg-cl5 shadow-md rounded-lg p-6 flex flex-col justify-center items-center text-center hover:scale-105 transform transition duration-300 ease-in-out cursor-pointer"
-              onClick={() =>
-                navigate(`/course/${course.courseCode}`, { state: { course } })
-              }
             >
+              <img
+                src="/assets/books.png"
+                alt="Books"
+                className="w-16 h-16 mb-4"
+              />
               <h3 className="text-xl font-bold text-cl4">{course.courseCode}</h3>
               <p className="text-cl4 text-sm mt-2">{course.courseName}</p>
+              <button
+                className="bg-cl4 text-white py-1 px-4 rounded-lg mt-4"
+                onClick={() => navigate(`/course/${course.courseCode}`, { state: { course } })}
+              >
+                View Course
+              </button>
+              <button
+                className="bg-cl6 text-white py-1 px-4 rounded-lg mt-2"
+                onClick={() => handleChatToggle(course.courseCode)}
+              >
+                Chat
+              </button>
+
+              {/* Chat Section */}
+              {activeChat === course.courseCode && (
+                <div className="w-full mt-4 p-4 bg-white shadow-md rounded-lg">
+                  <h4 className="text-cl4 font-semibold mb-2">Chat</h4>
+                  <div className="max-h-32 overflow-y-auto border rounded-md p-2 bg-gray-100">
+                    {(chatMessages[course.courseCode] || []).map(
+                      (message, idx) => (
+                        <p key={idx} className="text-sm text-cl4">
+                          {message}
+                        </p>
+                      )
+                    )}
+                  </div>
+                  <div className="mt-2 flex gap-2">
+                    <input
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      className="flex-1 p-2 border rounded-md"
+                      placeholder="Type a message..."
+                    />
+                    <button
+                      onClick={() => handleSendMessage(course.courseCode)}
+                      className="bg-cl4 text-white py-1 px-4 rounded-lg"
+                    >
+                      Send
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ))
         ) : (

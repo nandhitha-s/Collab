@@ -8,7 +8,6 @@ const PostAnnouncements = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const messageContainerRef = useRef(null);
   const teacherId = localStorage.getItem("userName");
 
   useEffect(() => {
@@ -45,22 +44,65 @@ const PostAnnouncements = () => {
     fetchCourses();
   }, [teacherId]);
 
-  useEffect(() => {
-    if (selectedCourse && messageContainerRef.current) {
-      messageContainerRef.current.scrollIntoView({ behavior: "smooth" });
+  const fetchAnnouncements = async (courseCode) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/announcement/listCourseAnnouncement",
+        { courseCode }
+      );
+      if (response.data.success) {
+        const messages = response.data.announcements.flatMap((announcement) =>
+          announcement.messages.map((msg) => ({
+            text: msg.msg,
+            sender: "Faculty",
+            timestamp: new Date(msg.timestamp).toLocaleString(),
+          }))
+        );
+        setMessages((prev) => ({ ...prev, [courseCode]: messages }));
+      } else {
+        setError("No announcements found for the course.");
+      }
+    } catch (error) {
+      setError("Error fetching announcements. Please try again later.");
     }
-  }, [messages, selectedCourse]);
+    setLoading(false);
+  };
 
-  const sendMessage = () => {
-    if (currentMessage.trim() !== "" && selectedCourse) {
-      setMessages((prevMessages) => ({
-        ...prevMessages,
-        [selectedCourse]: [
-          ...(prevMessages[selectedCourse] || []),
-          { text: currentMessage, sender: "Faculty" },
-        ],
-      }));
-      setCurrentMessage("");
+  const handleCourseSelect = (courseCode) => {
+    setSelectedCourse(courseCode);
+    fetchAnnouncements(courseCode);
+  };
+
+  const sendMessage = async () => {
+    if (currentMessage.trim() === "" || !selectedCourse) return;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/announcement/addAnnouncement",
+        {
+          teacherId,
+          courseCode: selectedCourse,
+          message: currentMessage,
+        }
+      );
+
+      if (response.data.success) {
+        const newMessage = {
+          text: currentMessage,
+          sender: "Faculty",
+          timestamp: new Date().toLocaleString(),
+        };
+        setMessages((prev) => ({
+          ...prev,
+          [selectedCourse]: [...(prev[selectedCourse] || []), newMessage],
+        }));
+        setCurrentMessage("");
+      } else {
+        setError("Error posting the announcement.");
+      }
+    } catch (error) {
+      setError("Error posting the announcement. Please try again later.");
     }
   };
 
@@ -89,7 +131,7 @@ const PostAnnouncements = () => {
               <li
                 key={course.courseCode}
                 className="p-3 flex items-center gap-4 bg-cl5 text-cl3 rounded-lg shadow cursor-pointer hover:bg-cl3 transition"
-                onClick={() => setSelectedCourse(course.courseCode)}
+                onClick={() => handleCourseSelect(course.courseCode)}
               >
                 <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full overflow-hidden">
                   <img
@@ -124,10 +166,7 @@ const PostAnnouncements = () => {
             </header>
 
             {/* Chat Messages */}
-            <div
-              className="flex-1 overflow-y-auto p-4 bg-cl5 rounded-lg scrollbar-thin scrollbar-thumb-cl4"
-              ref={messageContainerRef}
-            >
+            <div className="flex-1 overflow-y-auto p-4 bg-cl5 rounded-lg scrollbar-thin scrollbar-thumb-cl4">
               {messages[selectedCourse]?.map((message, idx) => (
                 <div
                   key={idx}
@@ -142,7 +181,8 @@ const PostAnnouncements = () => {
                         : "bg-cl3 text-cl5"
                     }`}
                   >
-                    {message.text}
+                    <p>{message.text}</p>
+                    <p className="text-xs mt-1 text-cl3">{message.timestamp}</p>
                   </div>
                 </div>
               ))}

@@ -7,6 +7,8 @@ const AssignTask = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [actionStatus, setActionStatus] = useState("");
+  const [file, setFile] = useState(null); // For file upload
+  const [assignmentTitle, setAssignmentTitle] = useState(""); // Assignment title
   const teacherId = localStorage.getItem("userName"); // Retrieve the teacher ID from localStorage
 
   useEffect(() => {
@@ -17,24 +19,19 @@ const AssignTask = () => {
 
     const fetchCourses = async () => {
       try {
-        console.log("Fetching courses for Teacher ID:", teacherId); // Log teacher ID
         const response = await axios.post(
           "http://localhost:5000/api/auth/teacher/listTeacherCourse",
           { teacherId }
         );
 
-        console.log("API Response:", response.data); // Log full API response
-
         if (response.data.success && response.data.courses.length > 0) {
           const formattedCourses = response.data.courses.flatMap((course) =>
             course.description.map((desc) => ({
-              id: course._id,
               courseCode: desc.courseCode,
               courseName: desc.courseName,
               courseParentName: course.name,
             }))
           );
-          console.log("Formatted Courses:", formattedCourses); // Log formatted courses
           setCourses(formattedCourses);
         } else if (response.data.courses.length === 0) {
           setActionStatus("No courses found for the teacher.");
@@ -43,7 +40,6 @@ const AssignTask = () => {
         }
       } catch (error) {
         setActionStatus("Error fetching courses. Please try again later.");
-        console.error("Error fetching courses:", error); // Log errors
       }
     };
 
@@ -51,24 +47,43 @@ const AssignTask = () => {
   }, [teacherId]);
 
   const handleCourseSelect = (course) => {
-    if (selectedCourse && selectedCourse.id === course.id) {
-      // Deselect the course if the same course is clicked
-      setSelectedCourse(null);
-    } else {
-      // Select the new course
-      setSelectedCourse(course);
-    }
+    setSelectedCourse(course);
   };
 
-  const handleAction = (action) => {
-    if (action === "createTask") {
-      window.open("https://forms.google.com", "_blank");
-      setActionStatus("Task creation form opened.");
-    } else if (action === "postProblemsheet") {
-      navigate("/upload-problemsheet", { state: { course: selectedCourse } });
-      setActionStatus("Navigating to post a problem sheet.");
+  const [fileId, setFileId] = useState(null);
+
+  const handleAssignmentSubmit = async () => {
+    if (!assignmentTitle || !file || !selectedCourse) {
+      setActionStatus("Please fill in all fields and upload a file.");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("teacherId", teacherId);
+    formData.append("courseId", selectedCourse.id);
+    formData.append("title", assignmentTitle);
+    formData.append("file", file);
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/assignment/addAssignment",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+  
+      if (response.data.success) {
+        setActionStatus("Assignment added successfully!");
+        setFileId(response.data.fileId);  // Store the file ID here if needed
+      } else {
+        setActionStatus(response.data.message);
+      }
+    } catch (error) {
+      setActionStatus("Error adding assignment. Please try again later.");
     }
   };
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-cl1">
@@ -93,15 +108,12 @@ const AssignTask = () => {
                 courses.map((course) => (
                   <div
                     key={course.id}
-                    className={`bg-cl5 shadow-md rounded-lg p-4 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out ${selectedCourse?.id === course.id ? 'bg-cl2' : ''}`}
+                    className="bg-cl5 shadow-md rounded-lg p-4 flex flex-col justify-center items-center text-center cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
                     onClick={() => handleCourseSelect(course)}
                   >
-                    <img
-                      src="/assets/to-do-list.png"
-                      alt="To-Do List"
-                      className="w-16 h-16 sm:w-20 sm:h-20 mb-4"
-                    />
-                    <h3 className="text-xl font-bold text-cl4">{course.courseParentName}</h3>
+                    <h3 className="text-xl font-bold text-cl4">
+                      {course.courseParentName}
+                    </h3>
                     <p className="text-cl4 text-sm mt-2">
                       Code: {course.courseCode}
                     </p>
@@ -122,26 +134,51 @@ const AssignTask = () => {
             <h2 className="text-xl font-bold text-cl4 mb-6">
               Assign Task for {selectedCourse.courseName}
             </h2>
+            <div className="mb-4">
+              <label
+                htmlFor="assignmentTitle"
+                className="block text-cl4 font-bold mb-2"
+              >
+                Assignment Title
+              </label>
+              <input
+                type="text"
+                id="assignmentTitle"
+                value={assignmentTitle}
+                onChange={(e) => setAssignmentTitle(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="fileUpload"
+                className="block text-cl4 font-bold mb-2"
+              >
+                Upload File
+              </label>
+              <input
+                type="file"
+                id="fileUpload"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="w-full border border-gray-300 p-2 rounded"
+              />
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <button
-                onClick={() => handleAction("createTask")}
+                onClick={handleAssignmentSubmit}
                 className="bg-cl4 text-white py-4 px-6 rounded-lg shadow-md hover:bg-cl2 transition"
               >
-                Create a Task
+                Add Assignment
               </button>
               <button
-                onClick={() => handleAction("postProblemsheet")}
-                className="bg-cl4 text-white py-4 px-6 rounded-lg shadow-md hover:bg-cl2 transition"
+                onClick={() => setSelectedCourse(null)}
+                className="bg-gray-400 text-white py-4 px-6 rounded-lg shadow-md hover:bg-gray-300 transition"
               >
-                Post a Problem Sheet
+                Back to Courses
               </button>
             </div>
-            <button
-              onClick={() => setSelectedCourse(null)}
-              className="mt-6 bg-cl2 text-cl5 py-2 px-4 rounded-lg hover:bg-cl4 transition"
-            >
-              Back to Courses
-            </button>
           </>
         )}
       </div>
