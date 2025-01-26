@@ -36,6 +36,10 @@ const CoursePage = () => {
     navigate(`/course/${course?.courseCode}/resources`, { state: { course } });
   };
 
+  const handleScheduleClick = () => {
+    navigate(`/course/${course?.courseCode}/schedule`, { state: { course } });
+  };
+
   return (
     <div className="flex flex-col h-screen bg-cl1">
       <header className="bg-cl4 text-white flex justify-between items-center p-4">
@@ -70,6 +74,20 @@ const CoursePage = () => {
             <div className="flex flex-col">
               <h3 className="text-lg font-semibold text-cl4">Resources</h3>
               <p className="text-cl4 text-sm">Access all your study materials and references.</p>
+            </div>
+          </div>
+          <div
+            className="bg-cl5 shadow-md rounded-lg p-6 space-y-4 flex items-center cursor-pointer"
+            onClick={handleScheduleClick}
+          >
+            <img
+              src="/assets/calendar.png"
+              alt="Schedule"
+              className="w-16 h-auto mr-4"
+            />
+            <div className="flex flex-col">
+              <h3 className="text-lg font-semibold text-cl4">Schedule</h3>
+              <p className="text-cl4 text-sm">View the course schedule for 2025.</p>
             </div>
           </div>
         </section>

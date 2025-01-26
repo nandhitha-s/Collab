@@ -15,6 +15,7 @@ import PostAnnouncements from "./components/PostAnnouncements";
 import AssignmentsPage from "./components/Assignment";
 import ResourcePage from "./components/ResourcePage";
 import LoadingPage from "./pages/LoadingPAge";
+import SchedulePage from "./components/SchedulePage";
 const App = () => {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/course/:courseCode/assignments"element={<AssignmentsPage />} />
         <Route path="/course/:courseCode/resources" element={<ResourcePage />} />
         <Route path="/loading" element={<LoadingPage/>}/>
+        <Route path="/course/:courseCode/schedule" element={<SchedulePage />} />
         
       </Routes>
     </BrowserRouter>
