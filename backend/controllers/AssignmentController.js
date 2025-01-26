@@ -161,14 +161,13 @@ const listAssignmentsForStudent = async (req, res) => {
     const { studentId , courseId } = req.body;
 
     // Check if student exists
-    const student = await StudentModel.findById(studentId);
-    if (!student) {
+    const user = await UserModel.findOne({username:studentId});
+      if (!user) {
       return res.json({ success: false, message: "Student not found" });
     }
-
     // Find assignments for the student (submissions)
-    const assignments = await AssignmentModel.find({courseId:courseId ,"submissions.studentId": studentId });
-
+    const assignments = await AssignmentModel.find({courseId:courseId});
+    console.log(assignments);
     return res.json({ success: true, assignments });
   } catch (error) {
     console.error("Error listing assignments for student:", error);
