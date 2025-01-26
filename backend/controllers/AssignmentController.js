@@ -56,43 +56,51 @@ const addAssignment = async (req, res) => {
 
 
 
-//Submit an Assignment
 const submitAssignment = async (req, res) => {
   try {
+    console.log("Request Body:", req.body);
+
     const { studentId, courseId, title, file } = req.body;
 
-    // Validate input
     if (!studentId || !courseId || !title || !file) {
       return res.status(400).json({ success: false, message: "Invalid input data" });
     }
-    const user = await UserModel.findOne({username:studentId});
-    // Check if student exists
-    const student = await StudentModel.findOne({userId:user._id});
+
+    const user = await UserModel.findOne({ username: studentId });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Student not found" });
+    }
+
+    const student = await StudentModel.findOne({ userId: user._id });
     if (!student) {
       return res.status(404).json({ success: false, message: "Student not found" });
     }
-    id = user._id;
-    // Check if assignment exists for the course and title
+
     const assignment = await AssignmentModel.findOne({ courseId, title });
     if (!assignment) {
       return res.status(404).json({ success: false, message: "Assignment not found" });
     }
 
-    // Add submission to the assignment
-    const updatedAssignment = await AssignmentModel.findByIdAndUpdate(
-      assignment._id,
-      {
-        $push: {
-          submissions: {
-            studentId:id,
-            submittedFile: { filename: file.filename },
-            submittedAt: new Date(),
-            status: "completed",
-          },
-        },
-      },
-      { new: true }
+    // Check if the student has already submitted this assignment
+    const existingSubmission = assignment.submissions.find(
+      (submission) => submission.studentId.toString() === user._id.toString()
     );
+    if (existingSubmission) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already submitted this assignment",
+      });
+    }
+
+    // Push new submission
+    assignment.submissions.push({
+      studentId: user._id,
+      submittedFile: { filename: file }, // Directly save the Base64 string as filename
+      submittedAt: new Date(),
+      status: "completed",
+    });
+
+    await assignment.save();
 
     return res.status(200).json({
       success: true,
