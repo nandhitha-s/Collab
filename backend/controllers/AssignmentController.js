@@ -137,9 +137,9 @@ const gradeAssignment = async (req, res) => {
 const listAssignmentsForTeacher = async (req, res) => {
   try {
     const { teacherId ,courseId } = req.body;
-
+    const user = await UserModel.findOne({username:teacherId})
     // Check if teacher exists
-    const teacher = await TeacherModel.findOne({ userId: teacherId });
+    const teacher = await TeacherModel.findOne({ userId: user._id });
     if (!teacher) {
       return res.json({ success: false, message: "Teacher not found" });
     }
