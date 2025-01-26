@@ -7,9 +7,9 @@ const AssignTask = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [actionStatus, setActionStatus] = useState("");
-  const [file, setFile] = useState(null); // For file upload
-  const [assignmentTitle, setAssignmentTitle] = useState(""); // Assignment title
-  const teacherId = localStorage.getItem("userName"); // Retrieve the teacher ID from localStorage
+  const [file, setFile] = useState(null); 
+  const [assignmentTitle, setAssignmentTitle] = useState(""); 
+  const teacherId = localStorage.getItem("userName"); 
 
   useEffect(() => {
     if (!teacherId) {
@@ -57,25 +57,35 @@ const AssignTask = () => {
       setActionStatus("Please fill in all fields and upload a file.");
       return;
     }
-
-    const formData = new FormData();
-    formData.append("teacherId", teacherId);
-    formData.append("courseId", selectedCourse.id);
-    formData.append("title", assignmentTitle);
-    formData.append("file", file);
-
+  
     try {
+      const fileToBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file); 
+          reader.onload = () => resolve(reader.result.split(",")[1]); 
+          reader.onerror = (error) => reject(error);
+        });
+  
+      const base64File = await fileToBase64(file);
+  
+      const payload = {
+        teacherId, 
+        courseId: selectedCourse.courseCode, 
+        title: assignmentTitle,
+        file: base64File, 
+      };
+  
       const response = await axios.post(
         "http://localhost:5000/api/auth/assignment/addAssignment",
-        formData,
+        payload,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { "Content-Type": "application/json" },
         }
       );
-
+  
       if (response.data.success) {
         setActionStatus("Assignment added successfully!");
-        setFileId(response.data.fileId); // Store the file ID here if needed
       } else {
         setActionStatus(response.data.message);
       }
@@ -83,6 +93,8 @@ const AssignTask = () => {
       setActionStatus("Error adding assignment. Please try again later.");
     }
   };
+ 
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-cl1">
@@ -113,7 +125,7 @@ const AssignTask = () => {
                     <img
                       src="/assets/leadership.png"
                       alt="Course"
-                      className="w-24 h-24 mb-4 object-cover rounded-full" // Adjust size as needed
+                      className="w-24 h-24 mb-4 object-cover rounded-full" 
                     />
                     <h3 className="text-xl font-bold text-cl4">
                       {course.courseParentName}

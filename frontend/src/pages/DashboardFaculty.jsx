@@ -79,7 +79,6 @@ const FacultyDashboard = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-cl1">
-      {/* Header */}
       <header className="bg-cl4 text-white flex justify-between items-center p-4 sticky top-0 z-10 shadow-lg">
         <h1 className="text-2xl font-bold">Faculty Dashboard</h1>
         <div className="flex items-center gap-4">
@@ -99,9 +98,7 @@ const FacultyDashboard = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="flex-1 p-4 grid gap-6">
-        {/* Action Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {actions.map((action, idx) => (
             <div
@@ -122,7 +119,6 @@ const FacultyDashboard = () => {
           ))}
         </div>
 
-        {/* Calendar & Holidays */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Calendar Section */}
           <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col items-center">
@@ -140,7 +136,6 @@ const FacultyDashboard = () => {
             ></iframe>
           </div>
 
-          {/* Holidays Section */}
           <div className="bg-white shadow-lg rounded-2xl p-6">
             <h2 className="text-xl font-bold text-cl4 mb-4">Upcoming Holidays</h2>
             <ul className="divide-y divide-gray-300 max-h-60 overflow-y-scroll">
