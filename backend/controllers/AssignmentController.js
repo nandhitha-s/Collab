@@ -65,13 +65,13 @@ const submitAssignment = async (req, res) => {
     if (!studentId || !courseId || !title || !file) {
       return res.status(400).json({ success: false, message: "Invalid input data" });
     }
-
+    const user = await UserModel.findOne({username:studentId});
     // Check if student exists
-    const student = await StudentModel.findById(studentId);
+    const student = await StudentModel.findOne({userId:user._id});
     if (!student) {
       return res.status(404).json({ success: false, message: "Student not found" });
     }
-
+    id = user._id;
     // Check if assignment exists for the course and title
     const assignment = await AssignmentModel.findOne({ courseId, title });
     if (!assignment) {
@@ -84,7 +84,7 @@ const submitAssignment = async (req, res) => {
       {
         $push: {
           submissions: {
-            studentId,
+            studentId:id,
             submittedFile: { filename: file.filename },
             submittedAt: new Date(),
             status: "completed",
