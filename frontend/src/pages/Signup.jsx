@@ -62,10 +62,10 @@ const SignUp = () => {
         )}
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-cl4 mb-2">USERNAME</label>
+          <label className="block text-sm font-medium text-cl4 mb-2">ROLLNUMBER</label>
           <input
             type="text"
-            placeholder="Enter your username"
+            placeholder="Enter your Roll Number (eg:22PT01)"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             className="w-full px-4 py-2 border border-cl3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cl4"

@@ -70,7 +70,7 @@ const Login = () => {
           <label className="block text-sm font-medium text-cl4 mb-2">Roll Number</label>
           <input
             type="text"
-            placeholder="Enter your Roll Number (eg:22pt01)"
+            placeholder="Enter your Roll Number (eg:22PT01)"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             className="w-full px-4 py-2 border border-cl3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cl4"
