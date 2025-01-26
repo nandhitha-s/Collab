@@ -9,7 +9,7 @@ const AssignTask = () => {
   const [actionStatus, setActionStatus] = useState("");
   const [file, setFile] = useState(null); 
   const [assignmentTitle, setAssignmentTitle] = useState(""); 
-  const teacherId = localStorage.getItem("userName"); 
+  const teacherId = localStorage.getItem("userName"); // Get teacher ID from localStorage
 
   useEffect(() => {
     if (!teacherId) {
@@ -20,7 +20,7 @@ const AssignTask = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/teacher/listTeacherCourse",
+          "http://localhost:5000/api/auth/teacher/listTeacherCourse", // Adjusted endpoint
           { teacherId }
         );
 
@@ -76,7 +76,7 @@ const AssignTask = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/assignment/addAssignment",
+        "http://localhost:5000/api/auth/assignment/addAssignment", // Updated endpoint
         payload,
         {
           headers: { "Content-Type": "application/json" },
