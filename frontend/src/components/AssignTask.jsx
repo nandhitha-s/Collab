@@ -20,7 +20,7 @@ const AssignTask = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/teacher/listTeacherCourse", // Adjusted endpoint
+          "https://collab-imps.onrender.com/api/auth/teacher/listTeacherCourse", // Adjusted endpoint
           { teacherId }
         );
 
@@ -50,12 +50,11 @@ const AssignTask = () => {
     setSelectedCourse(course);
   };
 
-  // Convert the file to base64 format before submission
   const fileToBase64 = (file) => 
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(",")[1]); // Extract base64 string
+      reader.onload = () => resolve(reader.result.split(",")[1]); 
       reader.onerror = (error) => reject(error);
     });
 
@@ -69,14 +68,14 @@ const AssignTask = () => {
       const base64File = await fileToBase64(file);
 
       const payload = {
-        teacherId, // Teacher ID from localStorage
-        courseId: selectedCourse.courseCode, // Course code selected
-        title: assignmentTitle, // Title of the assignment
-        file: base64File, // File converted to base64
+        teacherId, 
+        courseId: selectedCourse.courseCode, 
+        title: assignmentTitle, 
+        file: base64File, 
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/assignment/addAssignment", // Updated endpoint
+        "https://collab-imps.onrender.com/api/auth/assignment/addAssignment",    
         payload,
         {
           headers: { "Content-Type": "application/json" },

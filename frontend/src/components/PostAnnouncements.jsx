@@ -20,7 +20,7 @@ const PostAnnouncements = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/teacher/listTeacherCourse",
+          "https://collab-imps.onrender.com/api/auth/teacher/listTeacherCourse",
           { teacherId }
         );
 
@@ -49,7 +49,7 @@ const PostAnnouncements = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/announcement/listCourseAnnouncement",
+        "https://collab-imps.onrender.com/api/auth/announcement/listCourseAnnouncement",
         { courseCode }
       );
       if (response.data.success) {
@@ -80,7 +80,7 @@ const PostAnnouncements = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/announcement/addAnnouncement",
+        "https://collab-imps.onrender.com/api/auth/announcement/addAnnouncement",
         {
           teacherId,
           courseCode: selectedCourse,
