@@ -8,8 +8,6 @@ import authMiddleware from "./middleware/auth.js";
 import teacherRouter from "./routes/TeacherRoute.js";
 import announcementRouter from "./routes/AnnouncementRoute.js";
 import assignmentRouter from "./routes/AssignmentRoute.js";
-import mongoose from "mongoose";
-
 dotenv.config(); 
 
 const app = express();
