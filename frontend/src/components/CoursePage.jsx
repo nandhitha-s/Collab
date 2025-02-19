@@ -13,7 +13,7 @@ const CoursePage = () => {
     const fetchAnnouncements = async () => {
       try {
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/announcement/listCourseAnnouncement",
+          "https://collab-frontend-putq.onrender.com/api/auth/announcement/listCourseAnnouncement",
           { courseCode: course?.courseCode }
         );
         if (response.data.success) {
