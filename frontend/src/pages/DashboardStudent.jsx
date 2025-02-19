@@ -24,7 +24,7 @@ const Dashboard = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/course/dashboard",
+          "https://collab-i4sn.onrender.com/api/auth/course/dashboard",
           { userName: storedUserName },
           {
             headers: {
