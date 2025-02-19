@@ -49,7 +49,7 @@ const PostAnnouncements = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://collab-imps.onrender.com/api/auth/announcement/listCourseAnnouncement",
+        "https://collab-i4sn.onrender.com/api/auth/announcement/listCourseAnnouncement",
         { courseCode }
       );
       if (response.data.success) {
@@ -80,7 +80,7 @@ const PostAnnouncements = () => {
 
     try {
       const response = await axios.post(
-        "https://collab-imps.onrender.com/api/auth/announcement/addAnnouncement",
+        "https://collab-i4sn.onrender.com/api/auth/announcement/addAnnouncement",
         {
           teacherId,
           courseCode: selectedCourse,
