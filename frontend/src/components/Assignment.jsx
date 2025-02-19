@@ -19,7 +19,7 @@ const Assignment = () => {
       try {
         const studentId = localStorage.getItem("userName");
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/assignment/listAssignmentsForStudent",
+          "https://collab-frontend-putq.onrender.com/api/auth/assignment/listAssignmentsForStudent",
           {
             studentId,
             courseId: course?.courseCode,
