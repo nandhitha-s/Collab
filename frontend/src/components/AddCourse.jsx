@@ -11,7 +11,7 @@ const AddCourse = () => {
     const fetchAllCourses = async () => {
       try {
         const response = await axios.post(
-          "https://collab-frontend-putq.onrender.com/api/auth/course/allCourse"
+          "https://collab-i4sn.onrender.com/api/auth/course/allCourse"
         );
         if (response.data.success) {
           const { courseCodes, courseNames } = response.data;
@@ -31,7 +31,7 @@ const AddCourse = () => {
     const fetchAssignedCourses = async () => {
       try {
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/teacher/listTeacherCourse",
+          "https://collab-i4sn.onrender.com/api/auth/teacher/listTeacherCourse",
           { teacherId } 
         );
         if (response.data.success) {
@@ -59,7 +59,7 @@ const AddCourse = () => {
     if (!assignedCourses.find((assigned) => assigned.code === course.code)) {
       try {
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/teacher/addCourse",
+          "https://collab-i4sn.onrender.com/api/auth/teacher/addCourse",
           {
             teacherId, 
             courseId: [course.code],
