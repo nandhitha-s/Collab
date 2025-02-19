@@ -11,7 +11,7 @@ const AddCourse = () => {
     const fetchAllCourses = async () => {
       try {
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/course/allCourse"
+          "https://collab-frontend-putq.onrender.com/api/auth/course/allCourse"
         );
         if (response.data.success) {
           const { courseCodes, courseNames } = response.data;
