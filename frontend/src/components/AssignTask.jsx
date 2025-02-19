@@ -20,7 +20,7 @@ const AssignTask = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
-          "https://collab-imps.onrender.com/api/auth/teacher/listTeacherCourse", // Adjusted endpoint
+          "https://collab-frontend-putq.onrender.com/api/auth/teacher/listTeacherCourse", // Adjusted endpoint
           { teacherId }
         );
 
